@@ -255,14 +255,15 @@ module.exports = function(grunt) {
         preprocessors: {
           'app/js/*.js': ['coverage']
         },
-        coverageReporter: {type: 'text'}
+        coverageReporter: {type: 'text', dir : 'coverage/'}
       }
     }
   });
 
   //single run tests
-  grunt.registerTask('test', ['jshint','test:unit']);
-  grunt.registerTask('test:unit', ['karma:unit']);
+  grunt.registerTask('test', ['test:unit']);
+  grunt.registerTask('test:unit', ['html2js', 'jshint', 'karma:unit']);
+  grunt.registerTask('test:shell', ['html2js', 'jshint', 'karma:unit_coverage_shell']);
 
   //autotest and watch tests
   grunt.registerTask('autotest', ['autotest:unit']);
