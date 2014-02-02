@@ -9,7 +9,8 @@
     'smuPortFolio.directives',
     'smuPortFolio.controllers',
     'templates-main',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'restangular'
   ]).
 
   config(['$routeProvider', 'SMU_PL_TPL_PATH', function($routeProvider, SMU_PL_TPL_PATH) {

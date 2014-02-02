@@ -135,10 +135,11 @@ module.exports = function(grunt) {
         dest: './app/assets/angular-portfolio-dep.js',
         src: [
           'bower_components/jquery/jquery.js',
+          'bower_components/lodash/dist/lodash.js',
           'bower_components/angular/angular.js',
           'bower_components/d3/d3.js',
           'bower_components/angular-route/angular-route.js',
-          'bower_components/angular-resource/angular-resource.js',
+          'bower_components/restangular/dist/restangular.js',
           'bower_components/angular-animate/angular-animate.js',
           'bower_components/angular-bootstrap/ui-bootstrap-tpls.js'
         ]
@@ -167,10 +168,11 @@ module.exports = function(grunt) {
         dest: 'app/assets/angular-portfolio-all.min.js',
         src: [
           'bower_components/jquery/jquery.js',
+          'bower_components/lodash/dist/lodash.js',
           'bower_components/angular/angular.js',
           'bower_components/d3/d3.js',
           'bower_components/angular-route/angular-route.js',
-          'bower_components/angular-resource/angular-resource.js',
+          'bower_components/restangular/dist/restangular.js',
           'bower_components/angular-animate/angular-animate.js',
           'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
           'app/js/config.js',
@@ -274,13 +276,14 @@ module.exports = function(grunt) {
   grunt.registerTask('coverage', ['karma:unit_coverage', 'open:coverage', 'connect:coverage']);
 
   //installation-related
-  grunt.registerTask('build', ['shell:npm_install', 'html2js', 'concat', 'cssmin', 'uglify', 'copy']);
+  grunt.registerTask('build', ['build:dev', 'cssmin', 'uglify',]);
+  grunt.registerTask('build:dev', ['shell:npm_install', 'html2js', 'concat', 'copy']);
 
   //defaults
   grunt.registerTask('default', ['dev']);
 
   //development
-  grunt.registerTask('dev', ['build', 'express:api', 'configureProxies:devserver',
+  grunt.registerTask('dev', ['build:dev', 'express:api', 'configureProxies:devserver',
     'connect:devserver', 'watch']);
 
   //server daemon

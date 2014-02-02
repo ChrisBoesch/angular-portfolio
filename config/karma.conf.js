@@ -4,10 +4,11 @@ module.exports = function(config){
 
     files : [
       'bower_components/jquery/jquery.js',
+      'bower_components/lodash/dist/lodash.js',
       'bower_components/angular/angular.js',
       'bower_components/d3/d3.js',
       'bower_components/angular-route/angular-route.js',
-      'bower_components/angular-resource/angular-resource.js',
+      'bower_components/restangular/dist/restangular.js',
       'bower_components/angular-animate/angular-animate.js',
       'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
       'bower_components/angular-mocks/angular-mocks.js',

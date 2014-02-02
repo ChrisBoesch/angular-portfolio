@@ -3,7 +3,8 @@
 
   angular.module('smuPortFolio.config', []).
     
-    constant('SMU_PL_TPL_PATH', 'partials/smuPortFolio')
+    constant('SMU_PL_TPL_PATH', 'partials/smuPortFolio').
+    constant('SMU_PL_API_BASE', '/api/v1')
 
     ;
   
@@ -12,7 +13,12 @@
 
 angular.module("partials/smuPortFolio/home.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("partials/smuPortFolio/home.html",
-    "{{greeting}}");
+    "<h1>Students</h1>\n" +
+    "<ul>\n" +
+    "  <li ng-repeat=\"student in students\">\n" +
+    "    <a href=\"#\">{{student.fullName}}</a>\n" +
+    "  </li>\n" +
+    "</ul>");
 }]);
 ;(function(){
   'use strict';
@@ -23,7 +29,16 @@ angular.module("partials/smuPortFolio/home.html", []).run(["$templateCache", fun
 ;(function(){
   'use strict';
 
-  angular.module('smuPortFolio.services', []);
+  angular.module('smuPortFolio.services', ['smuPortFolio.config', 'restangular']).
+
+    factory('smuPFApi', ['SMU_PL_API_BASE', 'Restangular', function(SMU_PL_API_BASE, Restangular) {
+      return Restangular.withConfig(function(RestangularConfigurer) {
+        RestangularConfigurer.setBaseUrl(SMU_PL_API_BASE);
+        RestangularConfigurer.setRequestSuffix('.json');
+      });
+    }])
+  
+  ;
   
 })();
 ;(function(){
@@ -35,10 +50,16 @@ angular.module("partials/smuPortFolio/home.html", []).run(["$templateCache", fun
 ;(function(){
   'use strict';
 
-  angular.module('smuPortFolio.controllers', []).
+  angular.module('smuPortFolio.controllers', ['smuPortFolio.services']).
     
-    controller('SmuPFHomeCtrl', ['$scope', function($scope) {
-      $scope.greeting = 'Hello world!';
+    /**
+     * Should set:
+     * 
+     * - set a list of student
+     * 
+     */
+    controller('SmuPFHomeCtrl', ['$scope', 'smuPFApi', function($scope, smuPFApi) {
+      $scope.students = smuPFApi.all('students').getList().$object;
     }])
 
     ;
@@ -55,7 +76,8 @@ angular.module("partials/smuPortFolio/home.html", []).run(["$templateCache", fun
     'smuPortFolio.directives',
     'smuPortFolio.controllers',
     'templates-main',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'restangular'
   ]).
 
   config(['$routeProvider', 'SMU_PL_TPL_PATH', function($routeProvider, SMU_PL_TPL_PATH) {
