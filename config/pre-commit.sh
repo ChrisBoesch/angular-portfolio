@@ -10,10 +10,15 @@
 echo "Updating assets and running tests before commiting changes..."
 echo "----"
 
-# stash uncommitted changes
+# Discard any changes to built assets (to rebuilt them)
+git reset HEAD app/assets/*
+git reset HEAD app/fonts/*
+git reset HEAD app/js/templates.js
+
+# stash anything else
 git stash -q --keep-index
 
-# make sure to commit up to built assets
+# Rebuild assets
 grunt build
 git add app/assets/*
 git add app/fonts/*
