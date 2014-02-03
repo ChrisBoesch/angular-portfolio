@@ -13,8 +13,18 @@
 </head>
 
 <body>
-  
-  <div ng-view class="container"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="page-header">
+          <h1 ng-init="page={}" ng-bind="page.title">The Title Goes Here</h1>
+        </div>
+      </div>
+      <div class="col-md-4 side-bar">
+        <img src="http://placehold.it/300x100&text=logo" alt="logo" class="img-thumbnail">
+      </div>
+    </div>
+  <div ng-view class="row"></div>
 
   <!-- JavaScript -->
   <!-- <script src="assets/angular-portfolio-all.min.js"></script> -->

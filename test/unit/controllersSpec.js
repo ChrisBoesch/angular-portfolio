@@ -16,6 +16,7 @@
         scope = $rootScope.$new();
         getList = $q.defer();
         getList.$object = [];
+        scope.page = {};
 
         ctrl = $controller('SmuPFHomeCtrl', {
           $scope: scope,
@@ -33,7 +34,7 @@
 
       }));
 
-      it('should set the greeting', function() {
+      it('should set the student', function() {
         expect(route).toBe('students');
         expect(scope.students).toBe(getList.$object);
       });
@@ -47,6 +48,7 @@
         scope = $rootScope.$new();
         get = $q.defer();
         get.$object = [];
+        scope.page = {};
 
         ctrl = $controller('SmuPFPortfolioCtrl', {
           $scope: scope,

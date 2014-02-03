@@ -56,25 +56,52 @@ var evaluationId=1, EVALUATIONS = {
 
 var EVALUATION_RESULTS = {};
 
+var FIELDS = [
+  'Bahvioral Sciences',
+  'Biochemitry',
+  'Biostatistics & Epidemiology',
+  'Cardiovascular System',
+  'Gastrointestinal System',
+  'General Principles of Heatlth & Diseases',
+  'Genetics',
+  'Gross Anatomy & Embryology',
+  'Hematpoletic & Lymphoreticular Systems',
+  'Histology & immunology',
+  'Medicine',
+  'Musculoskeletal, Skin & Connective Tissue',
+  'Nervous System/Special Senses',
+  'Nutrition',
+  'Pathology',
+  'Pharmacology',
+  'Physiology',
+  'Renal/Urinary System',
+  'Reproductive & Endocrine Systems',
+  'Respiratory System',
+  'Surgery'
+];
+
 _.forEach(EXAMS, function(exams, groupName) {
   EXAM_RESULTS[groupName] = {};
-  _.forEach(exams, function(examName){
-    var min = getRandomArbitary(-1, -0.2),
-      max = getRandomArbitary(0.2, 1);
+  _.forEach(exams, function(exam){
+    EXAM_RESULTS[groupName][exam.name] = _.map(FIELDS, function (name) {
+      var min = getRandomArbitary(-1.8, -0.3),
+        max = getRandomArbitary(0.3, 1.9);
 
-    EXAM_RESULTS[groupName][examName] = {
-      min: min,
-      max: max,
-      // The mock won't create random value for each student
-      student: getRandomArbitary(min, max)
-    };
+      return {
+        name: name,
+        min: min,
+        max: max,
+        // The mock won't create random value for each student
+        student: getRandomArbitary(min, max)
+      };
+    });
   });
 });
 
 _.forEach(EVALUATIONS, function(evaluations, groupName) {
   EVALUATION_RESULTS[groupName] = {};
-  _.forEach(evaluations, function(evaluationNane){
-    EVALUATION_RESULTS[groupName][evaluationNane] = {
+  _.forEach(evaluations, function(evaluation){
+    EVALUATION_RESULTS[groupName][evaluation.name] = {
       student: getRandomArbitary(0, 1),
       mean: getRandomArbitary(0.35, 0.65)
     };
@@ -89,7 +116,7 @@ app.use(express.bodyParser());
 
 app.get('/', function(req, res) {
   setTimeout(function(){
-    res.send({'greeting': 'hello world'});
+    res.send({'greeting': 'hello world!!!'});
   }, DELAY);
 });
 
@@ -113,6 +140,33 @@ app.get('/students/:id(\\d+).json', function(req, res) {
   setTimeout(function(){
     res.send(student);
   }, DELAY);
+});
+
+app.get('/students/:studentId(\\d+)/exams/:examId(\\d+).json', function(req, res) {
+  var examId = parseInt(req.params.examId, 10),
+    result = {
+      student: {id: parseInt(req.params.studentId, 10)}
+    };
+
+  _.find(EXAMS, function(exams, groupName){
+    return _.find(exams, function(exam) {
+      if (exam.id === examId) {
+        result.groupName = groupName;
+        result.name = exam.name;
+        result.id = exam.id;
+
+        return true;
+      }
+      return false;
+    });
+  });
+
+  result.data = EXAM_RESULTS[result.groupName][result.name];
+
+  setTimeout(function(){
+    res.send(result);
+  }, DELAY);
+
 });
 
 
