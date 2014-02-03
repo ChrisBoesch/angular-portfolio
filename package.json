@@ -53,6 +53,7 @@
     "karma-safari-launcher": "~0.1.1",
     "phantomjs": "~1.9.7-1",
     "grunt-contrib-cssmin": "~0.7.0",
-    "grunt-contrib-uglify": "~0.3.2"
+    "grunt-contrib-uglify": "~0.3.2",
+    "lodash": "~2.4.1"
   }
 }
