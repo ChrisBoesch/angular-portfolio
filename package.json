@@ -1,0 +1,59 @@
+{
+  "name": "angular-portfolio",
+  "version": "0.0.0",
+  "description": "Student Portfolio Project",
+  "main": "app/assets/angular-portfolio.js",
+  "scripts": {
+    "test": "grunt test",
+    "postinstall": "node ./node_modules/bower/bin/bower install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ChrisBoesch/angular-portfolio.git"
+  },
+  "keywords": [
+    "angular",
+    "portfolio"
+  ],
+  "author": "Chris Boesch",
+  "bugs": {
+    "url": "https://github.com/ChrisBoesch/angular-portfolio/issues"
+  },
+  "homepage": "https://github.com/ChrisBoesch/angular-portfolio",
+  "devDependencies": {
+    "matchdep": "~0.3.0",
+    "grunt": "~0.4.2",
+    "bower": "~1.2.8",
+    "grunt-contrib-connect": "~0.6.0",
+    "grunt-contrib-jshint": "~0.8.0",
+    "grunt-shell": "~0.6.1",
+    "grunt-karma": "~0.6.2",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-open": "~0.2.2",
+    "grunt-express-server": "~0.4.11",
+    "grunt-connect-proxy": "~0.1.7",
+    "grunt-html2js": "~0.2.4",
+    "karma-jasmine": "~0.1.5",
+    "karma-junit-reporter": "~0.2.1",
+    "karma-ng-scenario": "~0.1.0",
+    "karma-script-launcher": "~0.1.0",
+    "karma-phantomjs-launcher": "~0.1.1",
+    "karma-chrome-launcher": "~0.1.2",
+    "karma-firefox-launcher": "~0.1.3",
+    "karma-html2js-preprocessor": "~0.1.0",
+    "karma-coffee-preprocessor": "~0.1.2",
+    "karma-coverage": "~0.1.0",
+    "karma-requirejs": "~0.2.1",
+    "karma": "~0.10.9",
+    "requirejs": "~2.1.10",
+    "grunt-shell-spawn": "~0.3.0",
+    "grunt-contrib-copy": "~0.5.0",
+    "express": "~3.4.7",
+    "karma-safari-launcher": "~0.1.1",
+    "phantomjs": "~1.9.7-1",
+    "grunt-contrib-cssmin": "~0.7.0",
+    "grunt-contrib-uglify": "~0.3.2",
+    "lodash": "~2.4.1"
+  }
+}
