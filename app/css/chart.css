@@ -32,9 +32,18 @@ line.mean {
   stroke: #ddd;
 }
 
+.results:hover text {
+  font-weight: 800;
+  font-size: 1.1em;
+}
+
+.results:hover line {
+  stroke-width: 2px;
+}
+
 /** y-axis **/
 
-.y-axis text {
+.results text {
   dominant-baseline: middle;
   text-anchor: start;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;

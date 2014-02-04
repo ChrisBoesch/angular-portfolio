@@ -6,6 +6,9 @@
       <line class="mean" ng-attr-transform="translate({{layout.innerWidth/2}},0)" ng-attr-y2="{{layout.innerHeight}}"/>
 
       <g class="results" ng-repeat="r in exam.data" ng-attr-transform="translate(0,{{yScale(r.name)}})">
+        <text ng-attr-transform="translate({{-layout.margin.left+10}},0)">
+          {{r.name}}
+        </text>
         <line ng-attr-x1="{{xScale(r.min)}}" ng-attr-x2="{{xScale(r.max)}}"/>
         <line class="min" ng-attr-transform="translate({{xScale(r.min)}})" y1="-5" y2="5"/>
         <line class="max" ng-attr-transform="translate({{xScale(r.max)}})" y1="-5" y2="5"/>
@@ -22,12 +25,6 @@
         <line y1="5" y2="8"/>
         <text dy="12">{{t}}</text>
       </g>
-    </g>
-
-    <g class="axis y-axis">
-      <text ng-repeat="name in yScale.domain()" ng-attr-transform="translate({{-layout.margin.left+10}}, {{yScale(name)}})">
-        {{name}}
-      </text>
     </g>
 
   </svg>

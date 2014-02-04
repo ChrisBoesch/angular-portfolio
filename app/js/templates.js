@@ -15,6 +15,9 @@ angular.module("partials/smuPortFolio/exam.html", []).run(["$templateCache", fun
     "      <line class=\"mean\" ng-attr-transform=\"translate({{layout.innerWidth/2}},0)\" ng-attr-y2=\"{{layout.innerHeight}}\"/>\n" +
     "\n" +
     "      <g class=\"results\" ng-repeat=\"r in exam.data\" ng-attr-transform=\"translate(0,{{yScale(r.name)}})\">\n" +
+    "        <text ng-attr-transform=\"translate({{-layout.margin.left+10}},0)\">\n" +
+    "          {{r.name}}\n" +
+    "        </text>\n" +
     "        <line ng-attr-x1=\"{{xScale(r.min)}}\" ng-attr-x2=\"{{xScale(r.max)}}\"/>\n" +
     "        <line class=\"min\" ng-attr-transform=\"translate({{xScale(r.min)}})\" y1=\"-5\" y2=\"5\"/>\n" +
     "        <line class=\"max\" ng-attr-transform=\"translate({{xScale(r.max)}})\" y1=\"-5\" y2=\"5\"/>\n" +
@@ -31,12 +34,6 @@ angular.module("partials/smuPortFolio/exam.html", []).run(["$templateCache", fun
     "        <line y1=\"5\" y2=\"8\"/>\n" +
     "        <text dy=\"12\">{{t}}</text>\n" +
     "      </g>\n" +
-    "    </g>\n" +
-    "\n" +
-    "    <g class=\"axis y-axis\">\n" +
-    "      <text ng-repeat=\"name in yScale.domain()\" ng-attr-transform=\"translate({{-layout.margin.left+10}}, {{yScale(name)}})\">\n" +
-    "        {{name}}\n" +
-    "      </text>\n" +
     "    </g>\n" +
     "\n" +
     "  </svg>\n" +
