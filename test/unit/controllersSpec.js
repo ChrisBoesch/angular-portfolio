@@ -77,6 +77,50 @@
       });
 
     });
+
+    describe('SmuPFExamCtrl', function(){
+      var httpBackend, results;
+
+      beforeEach(inject(function($controller, $rootScope, _$httpBackend_){
+        scope = $rootScope.$new();
+        scope.page = {};
+        httpBackend = _$httpBackend_;
+        results = {
+          "student": {
+            "id": 2
+          },
+          "groupName": "Performance Exams",
+          "name": "CP 2",
+          "id": 10,
+          "data": [
+            {
+              "name": "Bahvioral Sciences",
+              "min": -1.6183654441963882,
+              "max": 0.6080622356384993,
+              "student": -0.11444422187155445
+            },
+            {
+              "name": "Biochemitry",
+              "min": -1.007976780482568,
+              "max": 0.7360302161425352,
+              "student": -0.2466772289259196
+            }
+          ]
+        };
+        ctrl = $controller('SmuPFExamCtrl', {
+          $scope: scope,
+          $routeParams: {
+            'studentId': 2,
+            'examId': 10,
+          }
+        });
+      }));
+
+      it('should query the exam result for the student', function() {
+        httpBackend.expectGET('/api/v1/students/2/exams/10.json').respond(results);
+        httpBackend.flush();
+      });
+    });
   
   
   });

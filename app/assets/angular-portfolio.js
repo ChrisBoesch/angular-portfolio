@@ -268,7 +268,7 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
     controller(
       'SmuPFExamCtrl', ['$scope', '$window', '$routeParams', 'smuPFApi', 'smuPFSvgLayout', function($scope, window, params, api, layout) {
       var studentId = params.studentId,
-        examId = params.studentId,
+        examId = params.examId,
         exam = api.one('students', studentId).all('exams').get(examId),
         d3 = window.d3,
         _ = window._;
