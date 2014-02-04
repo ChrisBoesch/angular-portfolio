@@ -56,7 +56,7 @@ var evaluationId=1, EVALUATIONS = {
 
 var EVALUATION_RESULTS = {};
 
-var FIELDS = [
+var EXAM_FIELDS = [
   'Bahvioral Sciences',
   'Biochemitry',
   'Biostatistics & Epidemiology',
@@ -80,10 +80,27 @@ var FIELDS = [
   'Surgery'
 ];
 
+var EVALUATION_FIELDS = [
+  'History Taking Skills',
+  'Physical Examination Skills',
+  'Analytical Skills',
+  'Communication Skills',
+  'Medical Knowledge',
+  'Management Skills'
+];
+
+var EVALUATION_RESULTS_TYPE = [
+  'Do Not Meet',
+  'Occasionally Meet',
+  'Consistently Meet',
+  'Occasionally Exceeds',
+  'Consistently Exceeds'
+];
+
 _.forEach(EXAMS, function(exams, groupName) {
   EXAM_RESULTS[groupName] = {};
   _.forEach(exams, function(exam){
-    EXAM_RESULTS[groupName][exam.name] = _.map(FIELDS, function (name) {
+    EXAM_RESULTS[groupName][exam.name] = _.map(EXAM_FIELDS, function (name) {
       var min = getRandomArbitary(-1.8, -0.3),
         max = getRandomArbitary(0.3, 1.9);
 
@@ -101,10 +118,21 @@ _.forEach(EXAMS, function(exams, groupName) {
 _.forEach(EVALUATIONS, function(evaluations, groupName) {
   EVALUATION_RESULTS[groupName] = {};
   _.forEach(evaluations, function(evaluation){
-    EVALUATION_RESULTS[groupName][evaluation.name] = {
-      student: getRandomArbitary(0, 1),
-      mean: getRandomArbitary(0.35, 0.65)
-    };
+    EVALUATION_RESULTS[groupName][evaluation.name] = _.map(EVALUATION_FIELDS, function(field) {
+      return {
+        name: field,
+        data: _.map(EVALUATION_RESULTS_TYPE, function(type) {
+          return {
+            name: type,
+            // will not create consistant data;
+            // I assuming the sum of all type of result should equal 100%,
+            // but the mock up only return random percentage
+            student: getRandomArbitary(0, 1),
+            mean: getRandomArbitary(0, 1),
+          };
+        })
+      };
+    });
   });
 });
 
@@ -162,6 +190,33 @@ app.get('/students/:studentId(\\d+)/exams/:examId(\\d+).json', function(req, res
   });
 
   result.data = EXAM_RESULTS[result.groupName][result.name];
+
+  setTimeout(function(){
+    res.send(result);
+  }, DELAY);
+
+});
+
+app.get('/students/:studentId(\\d+)/evaluation/:evaluationId(\\d+).json', function(req, res) {
+  var evaluationId = parseInt(req.params.evaluationId, 10),
+    result = {
+      student: {id: parseInt(req.params.studentId, 10)}
+    };
+
+  _.find(EVALUATIONS, function(evaluations, groupName){
+    return _.find(evaluations, function(evaluation) {
+      if (evaluation.id === evaluationId) {
+        result.groupName = groupName;
+        result.name = evaluation.name;
+        result.id = evaluation.id;
+
+        return true;
+      }
+      return false;
+    });
+  });
+
+  result.data = EVALUATION_RESULTS[result.groupName][result.name];
 
   setTimeout(function(){
     res.send(result);
