@@ -334,7 +334,7 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
 
     filter('percent',  ['$window', function(window){
       var d3 = window.d3,
-        formatter = d3.format(".01%");
+        formatter = d3.format(".00%");
 
       return function(v) {
         return formatter(v);
