@@ -1,3 +1,7 @@
 .side-bar {
   text-align: center;
 }
+
+div.evaluation .row {
+  height: 300px;
+}

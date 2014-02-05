@@ -106,6 +106,64 @@
 
         });
 
+        it('should get a student exam', function(){
+          var alice, aliceData, examData;
+
+          $httpBackend.expectGET('/api/v1/students/1.json').respond(alice);
+          $httpBackend.expectGET('/api/v1/students/1/exams/2.json').respond(alice);
+
+          alice = api.one('students',1);
+          alice.get().then(function(resp){
+            aliceData = resp;
+          });
+
+          alice.all('exams').get(2).then(function(resp){
+            examData = resp;
+          });
+
+          $httpBackend.flush();
+
+        });
+
+      });
+
+    });
+
+    describe('smuPFSvgLayout', function(){
+      var layout;
+
+      beforeEach(inject(function(smuPFSvgLayout) {
+        layout = smuPFSvgLayout;
+      }));
+
+      it('should calculate innerWidth and innedHeight width default values', function() {
+        expect(layout()).toEqual({
+          margin: {top: 10, right: 10, bottom:10, left: 10},
+          width: 600,
+          height: 450,
+          innerWidth: 580,
+          innerHeight: 430
+        });
+      });
+
+      it('should calculate innerWidth and innedHeight width given margins', function() {
+        expect(layout({top: 10, right: 10, bottom:30, left: 300})).toEqual({
+          margin: {top: 10, right: 10, bottom:30, left: 300},
+          width: 600,
+          height: 450,
+          innerWidth: 290,
+          innerHeight: 410
+        });
+      });
+
+      it('should calculate innerWidth and innedHeight width all arguments', function() {
+        expect(layout({top: 10, right: 10, bottom:30, left: 250}, 500, 350)).toEqual({
+          margin: {top: 10, right: 10, bottom:30, left: 250},
+          width: 500,
+          height: 350,
+          innerWidth: 240,
+          innerHeight: 310
+        });
       });
 
     });

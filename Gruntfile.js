@@ -103,7 +103,8 @@ module.exports = function(grunt) {
       'app-styles': {
         dest: 'app/assets/angular-portfolio.css',
         src: [
-          'app/css/app.css'
+          'app/css/app.css',
+          'app/css/chart.css'
         ]
       },
       'dev-styles': {
@@ -154,7 +155,8 @@ module.exports = function(grunt) {
         src: [
           'app/assets/angular-portfolio.css',
           'app/assets/angular-portfolio-dep.css',
-          'app/css/app.css'
+          'app/css/app.css',
+          'app/css/chart.css'
         ]
       }
     },
@@ -201,11 +203,11 @@ module.exports = function(grunt) {
       },
       assets: {
         files: ['app/css/**/*.css', 'app/js/**/*.js'],
-        tasks: ['concat', 'cssmin', 'uglify']
+        tasks: ['concat', 'cssmin']
       },
       templates: {
         files: ['app/partials/**/*.html'],
-        tasks: ['html2js', 'concat', 'cssmin', 'uglify']
+        tasks: ['html2js', 'concat', 'cssmin']
       }
     },
 
