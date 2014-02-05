@@ -3,8 +3,52 @@ angular.module('templates-main', ['partials/smuPortFolio/charts/bars.html', 'par
 angular.module("partials/smuPortFolio/charts/bars.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("partials/smuPortFolio/charts/bars.html",
     "<h4>{{data.name}}</h4>\n" +
-    "<svg>\n" +
+    "<svg smupf-viewbox=\"layout\">\n" +
+    "\n" +
+    "  <g class=\"rulers\">\n" +
+    "    <line ng-repeat=\"v in yAxisScale.ticks(10)\" \n" +
+    "      ng-if=\"!$first\"\n" +
+    "      ng-attr-transform=\"translate(0,{{yAxisScale(v)}})\" \n" +
+    "      ng-attr-x2=\"{{layout.innerWidth}}\"\n" +
+    "    />\n" +
+    "  </g>\n" +
+    "\n" +
+    "  <g class=\"chart\">\n" +
+    "    <g class=\"serie\" ng-repeat=\"serie in data.data\" ng-attr-transform=\"translate({{xScale(serie.name)}},0)\">\n" +
+    "      <rect ng-repeat=\"field in xSubScale.domain()\"\n" +
+    "        ng-class=\"field|dash\"\n" +
+    "        ng-attr-x=\"{{xSubScale(field)}}\"\n" +
+    "        ng-attr-y=\"{{layout.innerHeight-yScale(serie[field])}}\"\n" +
+    "        ng-attr-width=\"{{xSubScale.rangeBand()}}\"\n" +
+    "        ng-attr-height=\"{{yScale(serie[field])}}\"\n" +
+    "      />\n" +
+    "    </g>\n" +
+    "  </g>\n" +
     "  \n" +
+    "  <g class=\"axis x-axis\" ng-attr-transform=\"translate(0, {{layout.innerHeight}})\">\n" +
+    "    <line ng-attr-x2=\"{{layout.innerWidth}}\"/>\n" +
+    "    <g class=\"tick\" ng-repeat=\"name in xScale.domain()\" ng-attr-transform=\"translate({{xScale(name)}},0)\">\n" +
+    "      <line y2=\"7\" ng-attr-transform=\"translate({{xScale.rangeBand()}},0)\"/>\n" +
+    "      <text ng-attr-x=\"{{xScale.rangeBand()/2}}\" dy=\"10\">{{name}}</text>\n" +
+    "    </g>\n" +
+    "  </g>\n" +
+    "\n" +
+    "  <g class=\"legend\"\n" +
+    "    ng-repeat=\"name in legendScale.domain()\"\n" +
+    "    ng-attr-transform=\"translate({{legendScale(name)}},{{layout.height}})\"\n" +
+    "  >\n" +
+    "    <rect ng-class=\"name|dash\" y=\"-2em\" width=\"1em\" height=\"1em\"/>\n" +
+    "    <text y=\"-1.5em\" x=\"2em\">{{name}}</text>\n" +
+    "  </g>\n" +
+    "\n" +
+    "  <g class=\"axis y-axis\">\n" +
+    "    <line ng-attr-y2=\"{{layout.innerHeight}}\"/>\n" +
+    "    <g class=\"tick\" ng-repeat=\"v in yAxisScale.ticks(10)\" ng-attr-transform=\"translate(0,{{yAxisScale(v)}})\">\n" +
+    "      <line x2=\"-7\"/>\n" +
+    "      <text dx=\"-12\">{{v|percent}}</text>\n" +
+    "    </g>\n" +
+    "  </g>\n" +
+    "\n" +
     "</svg>");
 }]);
 

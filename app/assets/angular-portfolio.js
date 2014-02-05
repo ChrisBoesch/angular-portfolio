@@ -14,8 +14,52 @@
 angular.module("partials/smuPortFolio/charts/bars.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("partials/smuPortFolio/charts/bars.html",
     "<h4>{{data.name}}</h4>\n" +
-    "<svg>\n" +
+    "<svg smupf-viewbox=\"layout\">\n" +
+    "\n" +
+    "  <g class=\"rulers\">\n" +
+    "    <line ng-repeat=\"v in yAxisScale.ticks(10)\" \n" +
+    "      ng-if=\"!$first\"\n" +
+    "      ng-attr-transform=\"translate(0,{{yAxisScale(v)}})\" \n" +
+    "      ng-attr-x2=\"{{layout.innerWidth}}\"\n" +
+    "    />\n" +
+    "  </g>\n" +
+    "\n" +
+    "  <g class=\"chart\">\n" +
+    "    <g class=\"serie\" ng-repeat=\"serie in data.data\" ng-attr-transform=\"translate({{xScale(serie.name)}},0)\">\n" +
+    "      <rect ng-repeat=\"field in xSubScale.domain()\"\n" +
+    "        ng-class=\"field|dash\"\n" +
+    "        ng-attr-x=\"{{xSubScale(field)}}\"\n" +
+    "        ng-attr-y=\"{{layout.innerHeight-yScale(serie[field])}}\"\n" +
+    "        ng-attr-width=\"{{xSubScale.rangeBand()}}\"\n" +
+    "        ng-attr-height=\"{{yScale(serie[field])}}\"\n" +
+    "      />\n" +
+    "    </g>\n" +
+    "  </g>\n" +
     "  \n" +
+    "  <g class=\"axis x-axis\" ng-attr-transform=\"translate(0, {{layout.innerHeight}})\">\n" +
+    "    <line ng-attr-x2=\"{{layout.innerWidth}}\"/>\n" +
+    "    <g class=\"tick\" ng-repeat=\"name in xScale.domain()\" ng-attr-transform=\"translate({{xScale(name)}},0)\">\n" +
+    "      <line y2=\"7\" ng-attr-transform=\"translate({{xScale.rangeBand()}},0)\"/>\n" +
+    "      <text ng-attr-x=\"{{xScale.rangeBand()/2}}\" dy=\"10\">{{name}}</text>\n" +
+    "    </g>\n" +
+    "  </g>\n" +
+    "\n" +
+    "  <g class=\"legend\"\n" +
+    "    ng-repeat=\"name in legendScale.domain()\"\n" +
+    "    ng-attr-transform=\"translate({{legendScale(name)}},{{layout.height}})\"\n" +
+    "  >\n" +
+    "    <rect ng-class=\"name|dash\" y=\"-2em\" width=\"1em\" height=\"1em\"/>\n" +
+    "    <text y=\"-1.5em\" x=\"2em\">{{name}}</text>\n" +
+    "  </g>\n" +
+    "\n" +
+    "  <g class=\"axis y-axis\">\n" +
+    "    <line ng-attr-y2=\"{{layout.innerHeight}}\"/>\n" +
+    "    <g class=\"tick\" ng-repeat=\"v in yAxisScale.ticks(10)\" ng-attr-transform=\"translate(0,{{yAxisScale(v)}})\">\n" +
+    "      <line x2=\"-7\"/>\n" +
+    "      <text dx=\"-12\">{{v|percent}}</text>\n" +
+    "    </g>\n" +
+    "  </g>\n" +
+    "\n" +
     "</svg>");
 }]);
 
@@ -199,12 +243,51 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
       };
     }).
 
-    directive('smupfBars', ['SMU_PL_TPL_PATH', function(path) {
+    directive('smupfBars', ['SMU_PL_TPL_PATH', 'smuPFSvgLayout', '$window', function(path, layout, window) {
           return {
             restrict: 'E',
             'templateUrl': path + '/charts/bars.html',
             scope: {
-              'data': '=smupfData'
+              'data': '=smupfData',
+              'width': '&smupfWidth',
+              'height': '&smupfHeight'
+            },
+            link: function(scope) {
+              var onDataChange, d3 = window.d3;
+
+              scope.layout = layout(
+                {top: 10, right: 10, bottom:70, left: 60},
+                scope.width(),
+                scope.height()
+              );
+
+              onDataChange = function() {
+                if (!scope.data) {
+                  return;
+                }
+
+                scope.xScale = d3.scale.ordinal();
+                scope.xSubScale = d3.scale.ordinal();
+                scope.yScale = d3.scale.linear();
+
+                // set domains
+                scope.data.data.forEach(function(type){
+                  scope.xScale(type.name);
+                });
+                scope.xSubScale = scope.xSubScale.domain(['You', 'All others']);
+                scope.yScale = scope.yScale.domain([0, 1]);
+
+                // set ranges
+                scope.xScale = scope.xScale.rangeBands([0, scope.layout.innerWidth], 0, 0);
+                scope.xSubScale = scope.xSubScale.rangeBands(
+                  [0, scope.layout.innerWidth/scope.xScale.domain().length], 0, 1)
+                ;
+                scope.legendScale = scope.xSubScale.copy().rangeBands([0, scope.layout.innerWidth], 0.1, 1);
+                scope.yScale = scope.yScale.range([0, scope.layout.innerHeight]).nice();
+                scope.yAxisScale = scope.yScale.copy().range([scope.layout.innerHeight, 0]).nice();
+              };
+
+              scope.$watch('data', onDataChange);
             }
           };
         }])
@@ -247,7 +330,24 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
 ;(function(){
   'use strict';
 
-  angular.module('smuPortFolio.filters', []);
+  angular.module('smuPortFolio.filters', []).
+
+    filter('percent',  ['$window', function(window){
+      var d3 = window.d3,
+        formatter = d3.format(".01%");
+
+      return function(v) {
+        return formatter(v);
+      };
+    }]).
+
+
+    filter('dash', function(){
+      return function(v) {
+        return v.replace(' ', '-');
+      };
+    });
+
   
 })();
 ;(function(){

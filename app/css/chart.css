@@ -14,7 +14,8 @@ text {
   color: #333;
   dominant-baseline: hanging;
   text-anchor: middle;
-  font-size: 10px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 12px;
 }
 
 /** chart rules **/
@@ -41,11 +42,38 @@ line.mean {
   stroke-width: 2px;
 }
 
+rect.You {
+  fill: #1E90FF;
+  stroke: #ddd;
+}
+
+rect.All-others {
+  fill: #B22222;
+  stroke: #ddd;
+}
+
+/** x-axis **/
+
+.legend, .legend text {
+  font-size: 16px;
+}
+
+.legend text {
+  dominant-baseline: middle;
+  text-anchor: start;
+}
+
 /** y-axis **/
 
 .results text {
   dominant-baseline: middle;
   text-anchor: start;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
 }
+
+.y-axis .tick text {
+  dominant-baseline: middle;
+  text-anchor: end;
+  font-size: 14px;
+}
+

@@ -127,8 +127,8 @@ _.forEach(EVALUATIONS, function(evaluations, groupName) {
             // will not create consistant data;
             // I assuming the sum of all type of result should equal 100%,
             // but the mock up only return random percentage
-            student: getRandomArbitary(0, 1),
-            mean: getRandomArbitary(0, 1),
+            'You': getRandomArbitary(0, 1),
+            'All others': getRandomArbitary(0, 1),
           };
         })
       };
