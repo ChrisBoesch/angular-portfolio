@@ -1,8 +1,27 @@
-angular.module('templates-main', ['partials/smuPortFolio/evaluation.html', 'partials/smuPortFolio/exam.html', 'partials/smuPortFolio/home.html', 'partials/smuPortFolio/portfolio.html']);
+angular.module('templates-main', ['partials/smuPortFolio/charts/bars.html', 'partials/smuPortFolio/evaluation.html', 'partials/smuPortFolio/exam.html', 'partials/smuPortFolio/home.html', 'partials/smuPortFolio/portfolio.html']);
+
+angular.module("partials/smuPortFolio/charts/bars.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("partials/smuPortFolio/charts/bars.html",
+    "<h4>{{data.name}}</h4>\n" +
+    "<svg>\n" +
+    "  \n" +
+    "</svg>");
+}]);
 
 angular.module("partials/smuPortFolio/evaluation.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("partials/smuPortFolio/evaluation.html",
-    "TODO");
+    "<div class=\"col-md-12 evaluation\">\n" +
+    "  <div class=\"row \">\n" +
+    "    <div class=\"col-md-4\" ng-repeat=\"i in [0,1,2]\">\n" +
+    "      <smupf-bars smupf-data=\"evaluation.data[i]\"></smupfBars>\n" +
+    "    </div>\n" +
+    "  </div>\n" +
+    "  <div class=\"row\">\n" +
+    "    <div class=\"col-md-4\" ng-repeat=\"i in [3,4,5]\">\n" +
+    "      <smupf-bars smupf-data=\"evaluation.data[i]\"></smupfBars>\n" +
+    "    </div>\n" +
+    "  </div>\n" +
+    "</div>");
 }]);
 
 angular.module("partials/smuPortFolio/exam.html", []).run(["$templateCache", function($templateCache) {

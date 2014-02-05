@@ -66,7 +66,16 @@
 
     }]).
 
-    controller('SmuPFEvaluationCtrl', [function() {}])
+    controller('SmuPFEvaluationCtrl', ['$scope', '$routeParams', 'smuPFApi', function($scope, params, api) {
+      var studentId = params.studentId,
+        evaluationId = params.evaluationId,
+        evaluation = api.one('students', studentId).all('evaluations').get(evaluationId);
+
+      $scope.evaluation = evaluation.$object;
+      evaluation.then(function(resp){
+        $scope.page.title = resp.name;
+      });
+    }])
 
     ;
   

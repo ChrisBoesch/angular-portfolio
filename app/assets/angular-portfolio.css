@@ -2,6 +2,9 @@
   text-align: center;
 }
 
+div.evaluation .row {
+  height: 300px;
+}
 rect {
   fill: none;
   stroke-width: 1px;

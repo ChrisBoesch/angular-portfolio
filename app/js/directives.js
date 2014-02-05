@@ -43,7 +43,17 @@
           });
         }
       };
-    })
+    }).
+
+    directive('smupfBars', ['SMU_PL_TPL_PATH', function(path) {
+          return {
+            restrict: 'E',
+            'templateUrl': path + '/charts/bars.html',
+            scope: {
+              'data': '=smupfData'
+            }
+          };
+        }])
 
   ;
   

@@ -197,7 +197,7 @@ app.get('/students/:studentId(\\d+)/exams/:examId(\\d+).json', function(req, res
 
 });
 
-app.get('/students/:studentId(\\d+)/evaluation/:evaluationId(\\d+).json', function(req, res) {
+app.get('/students/:studentId(\\d+)/evaluations/:evaluationId(\\d+).json', function(req, res) {
   var evaluationId = parseInt(req.params.evaluationId, 10),
     result = {
       student: {id: parseInt(req.params.studentId, 10)}
