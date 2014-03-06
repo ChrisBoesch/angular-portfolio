@@ -13,11 +13,52 @@
       scope = $rootScope.$new();
     }));
 
-    describe('smuPFApi', function(){
+    describe('smuPFApi', function() {
       var api;
 
       beforeEach(inject(function(smuPFApi) {
         api = smuPFApi;
+      }));
+
+      describe('students', function() {
+        var students;
+
+        beforeEach(function() {
+          students = {
+            'students': [
+              {fullName: 'Alice Smith', id: 1, matricule: 'X2010200001', photo: 'http://placehold.it/300x400'},
+              {fullName: 'Bob Taylor', id: 2, matricule: 'X2010200002', photo: 'http://placehold.it/300x400'},
+            ]
+          };
+        });
+
+        it('should get list of student details', function() {
+          var data;
+
+          $httpBackend.expectGET('/api/v1/students').respond(students);
+
+          api.all('students').getList().then(function(resp){
+            data = resp;
+          });
+
+          $httpBackend.flush();
+
+          expect(data[0].id).toBe(1);
+          expect(data[0].fullName).toBe('Alice Smith');
+          expect(data[0].matricule).toBe('X2010200001');
+          expect(data[1].id).toBe(2);
+          expect(data[1].fullName).toBe('Bob Taylor');
+          expect(data[1].matricule).toBe('X2010200002');
+        });
+      });
+    });
+
+
+    describe('smuPFPortfolioApi', function(){
+      var api;
+
+      beforeEach(inject(function(smuPFPortfolioApi) {
+        api = smuPFPortfolioApi;
       }));
 
       describe('students', function(){
@@ -70,29 +111,10 @@
           };
         });
 
-        it('should get list of student details', function() {
-          var data;
-
-          $httpBackend.expectGET('/api/v1/students.json').respond(students);
-
-          api.all('students').getList().then(function(resp){
-            data = resp;
-          });
-
-          $httpBackend.flush();
-
-          expect(data[0].id).toBe(1);
-          expect(data[0].fullName).toBe('Alice Smith');
-          expect(data[0].matricule).toBe('X2010200001');
-          expect(data[1].id).toBe(2);
-          expect(data[1].fullName).toBe('Bob Taylor');
-          expect(data[1].matricule).toBe('X2010200002');
-        });
-
         it('should get the details of one student', function(){
           var data;
 
-          $httpBackend.expectGET('/api/v1/students/1.json').respond(alice);
+          $httpBackend.expectGET('/api/v1/portfolio/students/1').respond(alice);
 
           api.all('students').get(1).then(function(resp){
             data = resp;
@@ -109,8 +131,8 @@
         it('should get a student exam', function(){
           var alice, aliceData, examData;
 
-          $httpBackend.expectGET('/api/v1/students/1.json').respond(alice);
-          $httpBackend.expectGET('/api/v1/students/1/exams/2.json').respond(alice);
+          $httpBackend.expectGET('/api/v1/portfolio/students/1').respond(alice);
+          $httpBackend.expectGET('/api/v1/portfolio/students/1/exams/2').respond(alice);
 
           alice = api.one('students',1);
           alice.get().then(function(resp){
@@ -167,7 +189,7 @@
       });
 
     });
-  
+
   });
 
 })();

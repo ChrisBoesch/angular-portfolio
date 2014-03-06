@@ -2,14 +2,15 @@
   'use strict';
 
   var interceptor = function(data, operation, what) {
-    var newResponse;
+    var resp;
+
     if (operation === "getList") {
-      newResponse = data[what];
-      newResponse.cursor = data.cursor;
+      resp = data[what] ? data[what] : [];
+      resp.cursor = data.cursor ? data.cursor : null;
     } else {
-      newResponse = data;
+      resp = data;
     }
-    return newResponse;
+    return resp;
   };
 
   angular.module('smuPortFolio.services', ['smuPortFolio.config', 'restangular']).
