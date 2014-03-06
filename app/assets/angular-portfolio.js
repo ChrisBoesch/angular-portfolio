@@ -152,7 +152,7 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
     "  <div class=\"row\">\n" +
     "\n" +
     "    <div class=\"col-md-6\">\n" +
-    "      <p ng-if=\"!student.exams\">You have not taken part to any exam.</p>\n" +
+    "      <p ng-if=\"!student.examSeries\">You have not taken part to any exam.</p>\n" +
     "\n" +
     "      <div ng-repeat=\"(_, serie) in student.examSeries\">\n" +
     "\n" +
@@ -301,14 +301,15 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
   'use strict';
 
   var interceptor = function(data, operation, what) {
-    var newResponse;
+    var resp;
+
     if (operation === "getList") {
-      newResponse = data[what];
-      newResponse.cursor = data.cursor;
+      resp = data[what] ? data[what] : [];
+      resp.cursor = data.cursor ? data.cursor : null;
     } else {
-      newResponse = data;
+      resp = data;
     }
-    return newResponse;
+    return resp;
   };
 
   angular.module('smuPortFolio.services', ['smuPortFolio.config', 'restangular']).

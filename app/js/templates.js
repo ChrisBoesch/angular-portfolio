@@ -141,7 +141,7 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
     "  <div class=\"row\">\n" +
     "\n" +
     "    <div class=\"col-md-6\">\n" +
-    "      <p ng-if=\"!student.exams\">You have not taken part to any exam.</p>\n" +
+    "      <p ng-if=\"!student.examSeries\">You have not taken part to any exam.</p>\n" +
     "\n" +
     "      <div ng-repeat=\"(_, serie) in student.examSeries\">\n" +
     "\n" +
