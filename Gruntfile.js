@@ -135,7 +135,7 @@ module.exports = function(grunt) {
         },
         dest: './app/assets/angular-portfolio-dep.js',
         src: [
-          'bower_components/jquery/jquery.js',
+          'bower_components/jquery/dist/jquery.js',
           'bower_components/lodash/dist/lodash.js',
           'bower_components/angular/angular.js',
           'bower_components/d3/d3.js',
@@ -143,7 +143,8 @@ module.exports = function(grunt) {
           'bower_components/restangular/dist/restangular.js',
           'bower_components/angular-animate/angular-animate.js',
           'bower_components/angular-bootstrap/ui-bootstrap-tpls.js'
-        ]
+        ],
+        nonull: true
       }
 
     },
@@ -169,7 +170,7 @@ module.exports = function(grunt) {
         },
         dest: 'app/assets/angular-portfolio-all.min.js',
         src: [
-          'bower_components/jquery/jquery.js',
+          'bower_components/jquery/dist/jquery.js',
           'bower_components/lodash/dist/lodash.js',
           'bower_components/angular/angular.js',
           'bower_components/d3/d3.js',
@@ -184,7 +185,8 @@ module.exports = function(grunt) {
           'app/js/filters.js',
           'app/js/controllers.js',
           'app/js/app.js'
-        ]
+        ],
+        nonull: true
       }
     },
 

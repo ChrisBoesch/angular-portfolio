@@ -1,12 +1,31 @@
 (function(){
   'use strict';
 
+  var interceptor = function(data, operation, what) {
+    var resp;
+
+    if (operation === "getList") {
+      resp = data[what] ? data[what] : [];
+      resp.cursor = data.cursor ? data.cursor : null;
+    } else {
+      resp = data;
+    }
+    return resp;
+  };
+
   angular.module('smuPortFolio.services', ['smuPortFolio.config', 'restangular']).
 
     factory('smuPFApi', ['SMU_PL_API_BASE', 'Restangular', function(SMU_PL_API_BASE, Restangular) {
       return Restangular.withConfig(function(RestangularConfigurer) {
         RestangularConfigurer.setBaseUrl(SMU_PL_API_BASE);
-        RestangularConfigurer.setRequestSuffix('.json');
+        RestangularConfigurer.addResponseInterceptor(interceptor);
+      });
+    }]).
+
+    factory('smuPFPortfolioApi', ['SMU_PL_API_BASE', 'Restangular', function(SMU_PL_API_BASE, Restangular) {
+      return Restangular.withConfig(function(RestangularConfigurer) {
+        RestangularConfigurer.setBaseUrl(SMU_PL_API_BASE + '/portfolio');
+        RestangularConfigurer.addResponseInterceptor(interceptor);
       });
     }]).
 
@@ -26,7 +45,7 @@
 
       };
     }])
-  
+
   ;
-  
+
 })();

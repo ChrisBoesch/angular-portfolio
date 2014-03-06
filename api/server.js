@@ -11,36 +11,52 @@ function getRandomArbitary(min, max) {
 
 
 var STUDENTS = [
-  {fullName: 'Alice Smith', id: 1, matricule: 'X2010200001', photo: 'http://placehold.it/300x400&text=portrait'},
-  {fullName: 'Bob Taylor', id: 2, matricule: 'X2010200002', photo: 'http://placehold.it/300x400&text=portrait'},
+  {firstName: 'Alice', lastName: 'Smith', id: 'X2010200001', photo: 'http://placehold.it/300x400&text=portrait'},
+  {firstName: 'Bob', lastName: 'Taylor', id: 'X2010200002', photo: 'http://placehold.it/300x400&text=portrait'},
 ];
 
 
 var examId = 1, EXAMS = {
-  'Some Exam Preparation': [
-    {name: 'External Exam 1', id: examId++},
-    {name: 'External Exam 2', id: examId++},
-    {name: 'External Exam 3', id: examId++},
-    {name: 'External Exam 4', id: examId++}
-  ],
-  'Another Exam Preparation': [
-    {name: 'Another Data Results 1', id: examId++},
-    {name: 'Another Data Results 2', id: examId++},
-    {name: 'Another Data Results 3', id: examId++},
-    {name: 'Another Data Results 4', id: examId++}
-  ],
-  'Performance Exams': [
-    {name: 'CP 1', id: examId++},
-    {name: 'CP 2', id: examId++}
-  ],
-  'AAA Exams':[
-    {name: 'Area 1', id: examId++},
-    {name: 'Area 2', id: examId++},
-    {name: 'Area 3', id: examId++},
-    {name: 'Area 4', id: examId++},
-    {name: 'Area 5', id: examId++},
-    {name: 'Area 6', id: examId++}
-  ]
+  '1': {
+    id: '1',
+    name: 'Some Exam Preparation',
+    exams: [
+      {name: 'External Exam 1', id: examId++},
+      {name: 'External Exam 2', id: examId++},
+      {name: 'External Exam 3', id: examId++},
+      {name: 'External Exam 4', id: examId++}
+    ]
+  },
+  '2': {
+    id: '2',
+    name: 'Another Exam Preparation',
+    exams: [
+      {name: 'Another Data Results 1', id: examId++},
+      {name: 'Another Data Results 2', id: examId++},
+      {name: 'Another Data Results 3', id: examId++},
+      {name: 'Another Data Results 4', id: examId++}
+    ]
+  },
+  '3': {
+    id: '3',
+    name: 'Performance Exams',
+    exams: [
+      {name: 'CP 1', id: examId++},
+      {name: 'CP 2', id: examId++}
+    ]
+  },
+  '4': {
+    id: '4',
+    name: 'AAA Exams',
+    exams: [
+      {name: 'Area 1', id: examId++},
+      {name: 'Area 2', id: examId++},
+      {name: 'Area 3', id: examId++},
+      {name: 'Area 4', id: examId++},
+      {name: 'Area 5', id: examId++},
+      {name: 'Area 6', id: examId++}
+    ]
+  }
 };
 var EXAM_RESULTS = {};
 
@@ -97,19 +113,33 @@ var EVALUATION_RESULTS_TYPE = [
   'Consistently Exceeds'
 ];
 
-_.forEach(EXAMS, function(exams, groupName) {
-  EXAM_RESULTS[groupName] = {};
-  _.forEach(exams, function(exam){
-    EXAM_RESULTS[groupName][exam.name] = _.map(EXAM_FIELDS, function (name) {
-      var min = getRandomArbitary(-1.8, -0.3),
-        max = getRandomArbitary(0.3, 1.9);
+_.forEach(EXAMS, function(serie) {
+  _.forEach(serie.exams, function(exam){
+    var fieldId = 1;
 
-      return {
-        name: name,
-        min: min,
-        max: max,
-        // The mock won't create random value for each student
-        student: getRandomArbitary(min, max)
+    EXAM_RESULTS[exam.id] = {
+      id: exam.id,
+      name: exam.name,
+      serie: {
+        id: serie.id,
+        name: serie.name
+      },
+      results: {}
+    };
+
+    _.forEach(EXAM_FIELDS, function (name) {
+      var min = getRandomArbitary(-1.8, -0.3),
+        max = getRandomArbitary(0.3, 1.9),
+        mean = getRandomArbitary(min, max),
+        field = {name: name, id: fieldId++};
+
+      EXAM_RESULTS[exam.id].results[field.id] = {
+        topic: field,
+        data: {
+          max: max,
+          min: min,
+          mean: mean
+        }
       };
     });
   });
@@ -149,20 +179,23 @@ app.get('/', function(req, res) {
 });
 
 
-app.get('/students.json', function(req, res) {
+app.get('/students', function(req, res) {
   setTimeout(function(){
-    res.send(STUDENTS);
+    res.send({
+      students: STUDENTS,
+      cursor: ''
+    });
   }, DELAY);
 });
 
 
-app.get('/students/:id(\\d+).json', function(req, res) {
-  var id = parseInt(req.params.id, 10),
+app.get('/portfolio/students/:id', function(req, res) {
+  var id = req.params.id,
     student = _.find(STUDENTS, function(s){return s.id === id;});
 
   // for this mock up we assume all students took part to the same exams and
   // evaluations.
-  student.exams = EXAMS;
+  student.examSeries = EXAMS;
   student.evaluations = EVALUATIONS;
 
   setTimeout(function(){
@@ -170,37 +203,21 @@ app.get('/students/:id(\\d+).json', function(req, res) {
   }, DELAY);
 });
 
-app.get('/students/:studentId(\\d+)/exams/:examId(\\d+).json', function(req, res) {
-  var examId = parseInt(req.params.examId, 10),
-    result = {
-      student: {id: parseInt(req.params.studentId, 10)}
-    };
+app.get('/portfolio/students/:studentId/exams/:examId', function(req, res) {
+  var examId = req.params.examId,
+    resp = EXAM_RESULTS[examId];
 
-  _.find(EXAMS, function(exams, groupName){
-    return _.find(exams, function(exam) {
-      if (exam.id === examId) {
-        result.groupName = groupName;
-        result.name = exam.name;
-        result.id = exam.id;
-
-        return true;
-      }
-      return false;
-    });
-  });
-
-  result.data = EXAM_RESULTS[result.groupName][result.name];
 
   setTimeout(function(){
-    res.send(result);
+    res.send(resp);
   }, DELAY);
 
 });
 
-app.get('/students/:studentId(\\d+)/evaluations/:evaluationId(\\d+).json', function(req, res) {
-  var evaluationId = parseInt(req.params.evaluationId, 10),
+app.get('/portfolio/students/:studentId/evaluations/:evaluationId', function(req, res) {
+  var evaluationId = req.params.evaluationId,
     result = {
-      student: {id: parseInt(req.params.studentId, 10)}
+      student: {id: req.params.studentId}
     };
 
   _.find(EVALUATIONS, function(evaluations, groupName){

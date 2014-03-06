@@ -2,13 +2,13 @@
   <div class="row">
 
     <div class="col-md-6">
-      <p ng-if="!student.exams">You have not taken part to any exam.</p>
-      
-      <div ng-repeat="(groupName, exams) in student.exams">
-        
-        <h3 ng-bind="groupName">Exam type</h3>
+      <p ng-if="!student.examSeries">You have not taken part to any exam.</p>
+
+      <div ng-repeat="(_, serie) in student.examSeries">
+
+        <h3 ng-bind="serie.name">Exam type</h3>
         <ul>
-          <li ng-repeat="exam in exams">
+          <li ng-repeat="(_, exam) in serie.exams">
             <a ng-href="#/portfolio/{{student.id}}/exam/{{exam.id}}" ng-bind="exam.name">No exam</a>
           </li>
         </ul>
@@ -20,7 +20,7 @@
       <p ng-if="!student.evaluations">You have not taken part to any evaluation.</p>
 
       <div ng-repeat="(groupName, evaluations) in student.evaluations">
-        
+
         <h3 ng-bind="groupName">Evaluation type</h3>
         <ul>
           <li ng-repeat="evaluation in evaluations">
@@ -28,7 +28,7 @@
           </li>
         </ul>
       </div>
-      
+
     </div>
 
   </div>
@@ -36,10 +36,11 @@
 </div>
 
 <div class="col-md-4 side-bar">
-  
+
   <img ng-src="{{student.photo}}" alt="student portrait" class="img-thumbnail"/>
   <h3>
-    <span ng-bind="student.fullName">Student name</span> 
+    <span ng-bind="student.firstName">Student first name</span>
+    <span ng-bind="student.lastName">Student last name</span>
     <small ng-bind="student.matricule">student matricule</small>
   </h3>
 
