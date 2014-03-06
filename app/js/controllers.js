@@ -2,12 +2,12 @@
   'use strict';
 
   angular.module('smuPortFolio.controllers', ['smuPortFolio.services']).
-    
+
     /**
      * Should set:
-     * 
+     *
      * - set a list of student
-     * 
+     *
      */
     controller('SmuPFHomeCtrl', ['$scope', 'smuPFApi', function($scope, smuPFApi) {
       $scope.page.title = "students";
@@ -20,27 +20,28 @@
      * - details
      * - nested list of exam results
      * - nested list of evaluations
-     * 
+     *
      */
-    controller('SmuPFPortfolioCtrl', ['$scope', '$routeParams', 'smuPFApi', function($scope, $routeParams, smuPFApi) {
+    controller('SmuPFPortfolioCtrl', ['$scope', '$routeParams', 'smuPFPortfolioApi', function($scope, $routeParams, api) {
       var studentId = $routeParams.studentId;
 
       $scope.page.title = "Results and Evaluations";
-      $scope.student = smuPFApi.all('students').get(studentId).$object;
+      $scope.student = api.all('students').get(studentId).$object;
+      console.dir($scope.student);
     }]).
 
     /**
      * Should set:
-     * 
+     *
      * - the exam result.
      * - the svg layout.
      * - the scale.
      *
      * TODO: The last two would pobably be better in a directive.
-     * 
+     *
      */
     controller(
-      'SmuPFExamCtrl', ['$scope', '$window', '$routeParams', 'smuPFApi', 'smuPFSvgLayout', function($scope, window, params, api, layout) {
+      'SmuPFExamCtrl', ['$scope', '$window', '$routeParams', 'smuPFPortfolioApi', 'smuPFSvgLayout', function($scope, window, params, api, layout) {
       var studentId = params.studentId,
         examId = params.examId,
         exam = api.one('students', studentId).all('exams').get(examId),
@@ -58,15 +59,15 @@
 
       exam.then(function(resp){
         $scope.page.title = resp.name;
-        resp.data.forEach(function(result) {
-          $scope.yScale(result.name);
+        Object.keys(resp.results).forEach(function(topicId) {
+          $scope.yScale(resp.results[topicId].topic.name);
         });
         $scope.yScale = $scope.yScale.rangePoints([$scope.layout.innerHeight, 0], 1);
       });
 
     }]).
 
-    controller('SmuPFEvaluationCtrl', ['$scope', '$routeParams', 'smuPFApi', function($scope, params, api) {
+    controller('SmuPFEvaluationCtrl', ['$scope', '$routeParams', 'smuPFPortfolioApi', function($scope, params, api) {
       var studentId = params.studentId,
         evaluationId = params.evaluationId,
         evaluation = api.one('students', studentId).all('evaluations').get(evaluationId);
@@ -78,5 +79,5 @@
     }])
 
     ;
-  
+
 })();
