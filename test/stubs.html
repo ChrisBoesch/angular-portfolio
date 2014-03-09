@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <h1>Initiating database...</h1>
+    <div id="console">
+
+    </div>
+    <script src="../assets/angular-portfolio-dep.js"></script>
+    <script>
+        var EXAM_FIELDS = [
+            'Bahvioral Sciences',
+            'Biochemitry',
+            'Biostatistics & Epidemiology',
+            'Cardiovascular System',
+            'Gastrointestinal System',
+            'General Principles of Heatlth & Diseases',
+            'Genetics',
+            'Gross Anatomy & Embryology',
+            'Hematpoletic & Lymphoreticular Systems',
+            'Histology & immunology',
+            'Medicine',
+            'Musculoskeletal, Skin & Connective Tissue',
+            'Nervous System/Special Senses',
+            'Nutrition',
+            'Pathology',
+            'Pharmacology',
+            'Physiology',
+            'Renal/Urinary System',
+            'Reproductive & Endocrine Systems',
+            'Respiratory System',
+            'Surgery'
+        ];
+
+        var EVALUATION_FIELDS = [
+            'History Taking Skills',
+            'Physical Examination Skills',
+            'Analytical Skills',
+            'Communication Skills',
+            'Medical Knowledge',
+            'Management Skills'
+        ];
+
+        var EVALUATION_RESULTS_TYPE = [
+            'Do Not Meet',
+            'Occasionally Meet',
+            'Consistently Meet',
+            'Occasionally Exceeds',
+            'Consistently Exceeds'
+        ];
+
+        function getRandomArbitary(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        function reject (data) {
+            var  d = $.Deferred();
+
+            setTimeout(function() {d.reject(data);}, 0)
+            return d.promise();
+        }
+
+        function log (msg) {
+            $('#console').append("<p>" + msg + "</p>")
+        }
+
+        function onError(data) {
+            var url = '';
+
+            if (!data.status || data.status == 401 || data.status == 403) {
+
+                if (data.loginUrl) {
+                    url = data.loginUrl;
+                } else if (data.logoutUrl) {
+                    url = data.logoutUrl;
+                }
+
+                log('You need to be <a href="' + url + '">logged in as admin</a>');
+            } else if (data.responseJSON && data.responseJSON.error) {
+                log(data.responseJSON.error);
+            } else {
+                log(data.status + ' ' + data.statusText + '(Check console).');
+            }
+        }
+
+        function newExamResults(serieId, examId, topicId, topicName, studentIds) {
+            var r = {
+                id: [serieId, examId, topicId].join('-'),
+                serie: {
+                    id: 's' + serieId,
+                    name: "Serie " + serieId
+                },
+                exam: {
+                    id: 'e' + examId,
+                    name: "Exam " + examId
+                },
+                topic: {
+                    id: 't' + topicId,
+                    name: topicName
+                },
+                results: {}
+            };
+
+            studentIds.forEach(function(id) {
+                r.results[id] = randomExam()
+            });
+
+            return r;
+        }
+
+        function randomExam() {
+            var min = getRandomArbitary(-1.8, -0.3),
+                max = getRandomArbitary(0.3, 1.9),
+                mean = getRandomArbitary(min, max);
+
+            return {
+                min: min,
+                max: max,
+                mean: mean
+            }
+        }
+
+        function chainAddExamResult(r, p) {
+            return p.then(function(d){
+                return $.post(
+                    '/api/v1/portfolio/results/exams',
+                    JSON.stringify(r)
+                ).then(function(data){
+                    log('Exam result added.')
+                });
+            });
+        }
+
+        function newEvaluationResults(serieId, evaluationId, topicId, topicName, studentIds) {
+            var r = {
+                id: [serieId, evaluationId, topicId].join('-'),
+                serie: {
+                    id: 's' + serieId,
+                    name: "Serie " + serieId
+                },
+                evaluation: {
+                    id: 'ev' + evaluationId,
+                    name: "Exam " + evaluationId
+                },
+                topic: {
+                    id: 't' + topicId,
+                    name: topicName
+                },
+                results: {},
+                meanResults: EVALUATION_RESULTS_TYPE.map(randomEvaluation)
+            };
+
+            studentIds.forEach(function(id) {
+                r.results[id] = EVALUATION_RESULTS_TYPE.map(randomEvaluation)
+            });
+
+            return r;
+        }
+
+        function randomEvaluation(name) {
+            return {
+                name: name,
+                value: getRandomArbitary(0, 1)
+            }
+        }
+
+        function chainAddEvaluationResult(r, p) {
+            return p.then(function(d){
+                return $.post(
+                    '/api/v1/portfolio/results/evaluations',
+                    JSON.stringify(r)
+                ).then(function(data){
+                    log('Evaluation result added.')
+                });
+            });
+        }
+
+        var studentPromise = $.get('/api/v1/user').then(function(data){
+            if (!data.isAdmin) {
+                return reject(data);
+            }
+            return data;
+        }).then(function (data) {
+            log('You logged in as "' + data.name + '"');
+
+            return $.post(
+                "/api/v1/students",
+                JSON.stringify({
+                    "email": "test@example.com",
+                    "firstName": "Alice",
+                    "id": "x1",
+                    "lastName": "smith",
+                    "photo": "http://placehold.it/300x400&text=portrait"
+                })
+            );
+        }).then(function (data) {
+            log('Alice has been added.')
+
+            return $.post(
+                "/api/v1/students",
+                JSON.stringify({
+                    "email": "test2@example.com",
+                    "firstName": "Bob",
+                    "id": "x2",
+                    "lastName": "Taylor",
+                    "photo": "http://placehold.it/300x400&text=portrait"
+                })
+            );
+        }).then(function(data) {
+            log('Bob has been added.')
+            return {}
+        });
+
+        var r, serieId, examId;
+        for (serieId = 1; serieId <= 1; serieId++) {
+            for (examId = 1; examId <= 1; examId++) {
+                EXAM_FIELDS.forEach(function(name, i){
+                    r = newExamResults(serieId, examId, i+1, name, ['x1'])
+                    studentPromise = chainAddExamResult(r, studentPromise)
+                });
+            };
+        }
+
+        var evaluationId;
+
+        for (serieId = 1; serieId <= 1; serieId++) {
+            for (evaluationId = 1; evaluationId <= 1; evaluationId++) {
+                EVALUATION_FIELDS.forEach(function(name, i){
+                    r = newEvaluationResults(serieId, evaluationId, i+1, name, ['x1'])
+                    studentPromise = chainAddEvaluationResult(r, studentPromise)
+                });
+            };
+        }
+
+        studentPromise.fail(onError);
+    </script>
+</body>
+</html>
