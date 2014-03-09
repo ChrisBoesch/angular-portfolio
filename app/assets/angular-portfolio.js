@@ -266,7 +266,7 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
                 if (!scope.data) {
                   return;
                 }
-                console.dir(scope.data);
+
                 scope.xScale = d3.scale.ordinal();
                 scope.xSubScale = d3.scale.ordinal();
                 scope.yScale = d3.scale.linear();
