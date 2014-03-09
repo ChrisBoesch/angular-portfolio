@@ -30,7 +30,6 @@
         },
         link: function(scope, element) {
 
-          console.dir(element);
           element.get(0).setAttribute('preserveAspectRatio', 'xMinYMin meet');
 
           scope.$watch('viewBox', function(){
@@ -77,7 +76,7 @@
                 scope.data.data.forEach(function(type){
                   scope.xScale(type.name);
                 });
-                scope.xSubScale = scope.xSubScale.domain(['You', 'All others']);
+                scope.xSubScale = scope.xSubScale.domain(['value', 'mean']);
                 scope.yScale = scope.yScale.domain([0, 1]);
 
                 // set ranges
@@ -88,6 +87,12 @@
                 scope.legendScale = scope.xSubScale.copy().rangeBands([0, scope.layout.innerWidth], 0.1, 1);
                 scope.yScale = scope.yScale.range([0, scope.layout.innerHeight]).nice();
                 scope.yAxisScale = scope.yScale.copy().range([scope.layout.innerHeight, 0]).nice();
+
+                // Translate legend name
+                scope.translate = function(fieldName) {
+                  var t = {'value': 'You', 'mean': 'All others'};
+                  return t[fieldName] ? t[fieldName] : fieldName;
+                };
               };
 
               scope.$watch('data', onDataChange);

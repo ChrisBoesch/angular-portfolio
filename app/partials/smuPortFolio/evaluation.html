@@ -1,12 +1,12 @@
 <div class="col-md-12 evaluation">
   <div class="row ">
-    <div class="col-md-4" ng-repeat="i in [0,1,2]">
-      <smupf-bars smupf-data="evaluation.data[i]"></smupfBars>
+    <div class="col-md-4" ng-repeat="(_, topic) in evaluation.results">
+      <smupf-bars smupf-data="topic" ng-if="$index < 3"></smupfBars>
     </div>
   </div>
   <div class="row">
-    <div class="col-md-4" ng-repeat="i in [3,4,5]">
-      <smupf-bars smupf-data="evaluation.data[i]"></smupfBars>
+    <div class="col-md-4" ng-repeat="(_, topic) in evaluation.results">
+      <smupf-bars smupf-data="topic" ng-if="$index >= 3 && $index < 6"></smupfBars>
     </div>
   </div>
 </div>

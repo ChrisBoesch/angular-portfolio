@@ -73,7 +73,7 @@
       it('should set the greeting', function() {
         expect(route).toBe('students');
         expect(id).toBe(1);
-        expect(scope.student).toBe(get.$object);
+        expect(scope.portfolio).toBe(get.$object);
       });
 
     });
