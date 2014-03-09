@@ -17,7 +17,14 @@
       return function(v) {
         return v.replace(' ', '-');
       };
+    }).
+
+
+    filter('isEmpty', function(){
+      return function(o){
+        return !o || Object.keys(o).length === 0;
+      };
     });
 
-  
+
 })();

@@ -26,8 +26,7 @@
       var studentId = $routeParams.studentId;
 
       $scope.page.title = "Results and Evaluations";
-      $scope.student = api.all('students').get(studentId).$object;
-      console.dir($scope.student);
+      $scope.portfolio = api.all('students').get(studentId).$object;
     }]).
 
     /**

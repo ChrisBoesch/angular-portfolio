@@ -95,7 +95,7 @@
                     name: "Serie " + serieId
                 },
                 exam: {
-                    id: 'e' + examId,
+                    id: 's' + serieId + 'e' + examId,
                     name: "Exam " + examId
                 },
                 topic: {
@@ -143,8 +143,8 @@
                     name: "Serie " + serieId
                 },
                 evaluation: {
-                    id: 'ev' + evaluationId,
-                    name: "Exam " + evaluationId
+                    id: 's' + serieId + 'ev' + evaluationId,
+                    name: "Evaluation " + evaluationId
                 },
                 topic: {
                     id: 't' + topicId,
@@ -216,10 +216,10 @@
         });
 
         var r, serieId, examId;
-        for (serieId = 1; serieId <= 1; serieId++) {
-            for (examId = 1; examId <= 1; examId++) {
+        for (serieId = 1; serieId <= 2; serieId++) {
+            for (examId = 1; examId <= 2; examId++) {
                 EXAM_FIELDS.forEach(function(name, i){
-                    r = newExamResults(serieId, examId, i+1, name, ['x1'])
+                    r = newExamResults(serieId, examId, i+1, name, ['x1', 'x2'])
                     studentPromise = chainAddExamResult(r, studentPromise)
                 });
             };
@@ -227,10 +227,10 @@
 
         var evaluationId;
 
-        for (serieId = 1; serieId <= 1; serieId++) {
-            for (evaluationId = 1; evaluationId <= 1; evaluationId++) {
+        for (serieId = 1; serieId <= 2; serieId++) {
+            for (evaluationId = 1; evaluationId <= 2; evaluationId++) {
                 EVALUATION_FIELDS.forEach(function(name, i){
-                    r = newEvaluationResults(serieId, evaluationId, i+1, name, ['x1'])
+                    r = newEvaluationResults(serieId, evaluationId, i+1, name, ['x1', 'x2'])
                     studentPromise = chainAddEvaluationResult(r, studentPromise)
                 });
             };

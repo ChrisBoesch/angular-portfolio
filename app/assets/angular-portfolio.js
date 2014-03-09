@@ -13,13 +13,13 @@
 
 angular.module("partials/smuPortFolio/charts/bars.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("partials/smuPortFolio/charts/bars.html",
-    "<h4>{{data.name}}</h4>\n" +
+    "<h4>{{data.topic.name}}</h4>\n" +
     "<svg smupf-viewbox=\"layout\">\n" +
     "\n" +
     "  <g class=\"rulers\">\n" +
-    "    <line ng-repeat=\"v in yAxisScale.ticks(10)\" \n" +
+    "    <line ng-repeat=\"v in yAxisScale.ticks(10)\"\n" +
     "      ng-if=\"!$first\"\n" +
-    "      ng-attr-transform=\"translate(0,{{yAxisScale(v)}})\" \n" +
+    "      ng-attr-transform=\"translate(0,{{yAxisScale(v)}})\"\n" +
     "      ng-attr-x2=\"{{layout.innerWidth}}\"\n" +
     "    />\n" +
     "  </g>\n" +
@@ -27,7 +27,7 @@ angular.module("partials/smuPortFolio/charts/bars.html", []).run(["$templateCach
     "  <g class=\"chart\">\n" +
     "    <g class=\"serie\" ng-repeat=\"serie in data.data\" ng-attr-transform=\"translate({{xScale(serie.name)}},0)\">\n" +
     "      <rect ng-repeat=\"field in xSubScale.domain()\"\n" +
-    "        ng-class=\"field|dash\"\n" +
+    "        ng-class=\"translate(field)|dash\"\n" +
     "        ng-attr-x=\"{{xSubScale(field)}}\"\n" +
     "        ng-attr-y=\"{{layout.innerHeight-yScale(serie[field])}}\"\n" +
     "        ng-attr-width=\"{{xSubScale.rangeBand()}}\"\n" +
@@ -35,7 +35,7 @@ angular.module("partials/smuPortFolio/charts/bars.html", []).run(["$templateCach
     "      />\n" +
     "    </g>\n" +
     "  </g>\n" +
-    "  \n" +
+    "\n" +
     "  <g class=\"axis x-axis\" ng-attr-transform=\"translate(0, {{layout.innerHeight}})\">\n" +
     "    <line ng-attr-x2=\"{{layout.innerWidth}}\"/>\n" +
     "    <g class=\"tick\" ng-repeat=\"name in xScale.domain()\" ng-attr-transform=\"translate({{xScale(name)}},0)\">\n" +
@@ -48,7 +48,7 @@ angular.module("partials/smuPortFolio/charts/bars.html", []).run(["$templateCach
     "    ng-repeat=\"name in legendScale.domain()\"\n" +
     "    ng-attr-transform=\"translate({{legendScale(name)}},{{layout.height}})\"\n" +
     "  >\n" +
-    "    <rect ng-class=\"name|dash\" y=\"-2em\" width=\"1em\" height=\"1em\"/>\n" +
+    "    <rect ng-class=\"translate(name)|dash\" y=\"-2em\" width=\"1em\" height=\"1em\"/>\n" +
     "    <text y=\"-1.5em\" x=\"2em\">{{name}}</text>\n" +
     "  </g>\n" +
     "\n" +
@@ -67,13 +67,13 @@ angular.module("partials/smuPortFolio/evaluation.html", []).run(["$templateCache
   $templateCache.put("partials/smuPortFolio/evaluation.html",
     "<div class=\"col-md-12 evaluation\">\n" +
     "  <div class=\"row \">\n" +
-    "    <div class=\"col-md-4\" ng-repeat=\"i in [0,1,2]\">\n" +
-    "      <smupf-bars smupf-data=\"evaluation.data[i]\"></smupfBars>\n" +
+    "    <div class=\"col-md-4\" ng-repeat=\"(_, topic) in evaluation.results\">\n" +
+    "      <smupf-bars smupf-data=\"topic\" ng-if=\"$index < 3\"></smupfBars>\n" +
     "    </div>\n" +
     "  </div>\n" +
     "  <div class=\"row\">\n" +
-    "    <div class=\"col-md-4\" ng-repeat=\"i in [3,4,5]\">\n" +
-    "      <smupf-bars smupf-data=\"evaluation.data[i]\"></smupfBars>\n" +
+    "    <div class=\"col-md-4\" ng-repeat=\"(_, topic) in evaluation.results\">\n" +
+    "      <smupf-bars smupf-data=\"topic\" ng-if=\"$index >= 3 && $index < 6\"></smupfBars>\n" +
     "    </div>\n" +
     "  </div>\n" +
     "</div>");
@@ -152,14 +152,14 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
     "  <div class=\"row\">\n" +
     "\n" +
     "    <div class=\"col-md-6\">\n" +
-    "      <p ng-if=\"!student.examSeries\">You have not taken part to any exam.</p>\n" +
+    "      <p ng-if=\"portfolio.examSeries|isEmpty\">You have not taken part to any exam.</p>\n" +
     "\n" +
-    "      <div ng-repeat=\"(_, serie) in student.examSeries\">\n" +
+    "      <div ng-repeat=\"(_, serie) in portfolio.examSeries\">\n" +
     "\n" +
     "        <h3 ng-bind=\"serie.name\">Exam type</h3>\n" +
     "        <ul>\n" +
     "          <li ng-repeat=\"(_, exam) in serie.exams\">\n" +
-    "            <a ng-href=\"#/portfolio/{{student.id}}/exam/{{exam.id}}\" ng-bind=\"exam.name\">No exam</a>\n" +
+    "            <a ng-href=\"#/portfolio/{{portfolio.id}}/exam/{{exam.id}}\" ng-bind=\"exam.name\">No exam</a>\n" +
     "          </li>\n" +
     "        </ul>\n" +
     "      </div>\n" +
@@ -167,14 +167,14 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
     "    </div>\n" +
     "\n" +
     "    <div class=\"col-md-6\">\n" +
-    "      <p ng-if=\"!student.evaluations\">You have not taken part to any evaluation.</p>\n" +
+    "      <p ng-if=\"portfolio.evaluationSeries|isEmpty\">You have not taken part to any evaluation.</p>\n" +
     "\n" +
-    "      <div ng-repeat=\"(groupName, evaluations) in student.evaluations\">\n" +
+    "      <div ng-repeat=\"(_, serie) in portfolio.evaluationSeries\">\n" +
     "\n" +
-    "        <h3 ng-bind=\"groupName\">Evaluation type</h3>\n" +
+    "        <h3 ng-bind=\"serie.name\">Evaluation type</h3>\n" +
     "        <ul>\n" +
-    "          <li ng-repeat=\"evaluation in evaluations\">\n" +
-    "            <a ng-href=\"#/portfolio/{{student.id}}/evaluation/{{evaluation.id}}\" ng-bind=\"evaluation.name\">No evaluation</a>\n" +
+    "          <li ng-repeat=\"(_, evaluation) in serie.evaluations\">\n" +
+    "            <a ng-href=\"#/portfolio/{{portfolio.id}}/evaluation/{{evaluation.id}}\" ng-bind=\"evaluation.name\">No evaluation</a>\n" +
     "          </li>\n" +
     "        </ul>\n" +
     "      </div>\n" +
@@ -187,11 +187,11 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
     "\n" +
     "<div class=\"col-md-4 side-bar\">\n" +
     "\n" +
-    "  <img ng-src=\"{{student.photo}}\" alt=\"student portrait\" class=\"img-thumbnail\"/>\n" +
+    "  <img ng-src=\"{{portfolio.student.photo}}\" alt=\"student portrait\" class=\"img-thumbnail\"/>\n" +
     "  <h3>\n" +
-    "    <span ng-bind=\"student.firstName\">Student first name</span>\n" +
-    "    <span ng-bind=\"student.lastName\">Student last name</span>\n" +
-    "    <small ng-bind=\"student.matricule\">student matricule</small>\n" +
+    "    <span ng-bind=\"portfolio.student.firstName\">Student first name</span>\n" +
+    "    <span ng-bind=\"portfolio.student.lastName\">Student last name</span>\n" +
+    "    <small ng-bind=\"portfolio.student.matricule\">student matricule</small>\n" +
     "  </h3>\n" +
     "\n" +
     "</div>\n" +
@@ -229,7 +229,6 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
         },
         link: function(scope, element) {
 
-          console.dir(element);
           element.get(0).setAttribute('preserveAspectRatio', 'xMinYMin meet');
 
           scope.$watch('viewBox', function(){
@@ -267,7 +266,7 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
                 if (!scope.data) {
                   return;
                 }
-
+                console.dir(scope.data);
                 scope.xScale = d3.scale.ordinal();
                 scope.xSubScale = d3.scale.ordinal();
                 scope.yScale = d3.scale.linear();
@@ -276,7 +275,7 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
                 scope.data.data.forEach(function(type){
                   scope.xScale(type.name);
                 });
-                scope.xSubScale = scope.xSubScale.domain(['You', 'All others']);
+                scope.xSubScale = scope.xSubScale.domain(['value', 'mean']);
                 scope.yScale = scope.yScale.domain([0, 1]);
 
                 // set ranges
@@ -287,6 +286,12 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
                 scope.legendScale = scope.xSubScale.copy().rangeBands([0, scope.layout.innerWidth], 0.1, 1);
                 scope.yScale = scope.yScale.range([0, scope.layout.innerHeight]).nice();
                 scope.yAxisScale = scope.yScale.copy().range([scope.layout.innerHeight, 0]).nice();
+
+                // Translate legend name
+                scope.translate = function(fieldName) {
+                  var t = {'value': 'You', 'mean': 'All others'};
+                  return t[fieldName] ? t[fieldName] : fieldName;
+                };
               };
 
               scope.$watch('data', onDataChange);
@@ -367,9 +372,16 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
       return function(v) {
         return v.replace(' ', '-');
       };
+    }).
+
+
+    filter('isEmpty', function(){
+      return function(o){
+        return !o || Object.keys(o).length === 0;
+      };
     });
 
-  
+
 })();
 ;(function(){
   'use strict';
@@ -399,8 +411,7 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
       var studentId = $routeParams.studentId;
 
       $scope.page.title = "Results and Evaluations";
-      $scope.student = api.all('students').get(studentId).$object;
-      console.dir($scope.student);
+      $scope.portfolio = api.all('students').get(studentId).$object;
     }]).
 
     /**

@@ -1,10 +1,10 @@
-<h4>{{data.name}}</h4>
+<h4>{{data.topic.name}}</h4>
 <svg smupf-viewbox="layout">
 
   <g class="rulers">
-    <line ng-repeat="v in yAxisScale.ticks(10)" 
+    <line ng-repeat="v in yAxisScale.ticks(10)"
       ng-if="!$first"
-      ng-attr-transform="translate(0,{{yAxisScale(v)}})" 
+      ng-attr-transform="translate(0,{{yAxisScale(v)}})"
       ng-attr-x2="{{layout.innerWidth}}"
     />
   </g>
@@ -12,7 +12,7 @@
   <g class="chart">
     <g class="serie" ng-repeat="serie in data.data" ng-attr-transform="translate({{xScale(serie.name)}},0)">
       <rect ng-repeat="field in xSubScale.domain()"
-        ng-class="field|dash"
+        ng-class="translate(field)|dash"
         ng-attr-x="{{xSubScale(field)}}"
         ng-attr-y="{{layout.innerHeight-yScale(serie[field])}}"
         ng-attr-width="{{xSubScale.rangeBand()}}"
@@ -20,7 +20,7 @@
       />
     </g>
   </g>
-  
+
   <g class="axis x-axis" ng-attr-transform="translate(0, {{layout.innerHeight}})">
     <line ng-attr-x2="{{layout.innerWidth}}"/>
     <g class="tick" ng-repeat="name in xScale.domain()" ng-attr-transform="translate({{xScale(name)}},0)">
@@ -33,7 +33,7 @@
     ng-repeat="name in legendScale.domain()"
     ng-attr-transform="translate({{legendScale(name)}},{{layout.height}})"
   >
-    <rect ng-class="name|dash" y="-2em" width="1em" height="1em"/>
+    <rect ng-class="translate(name)|dash" y="-2em" width="1em" height="1em"/>
     <text y="-1.5em" x="2em">{{name}}</text>
   </g>
 
