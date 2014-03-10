@@ -15,7 +15,7 @@
       beforeEach(inject(function($controller, $rootScope, $q){
         scope = $rootScope.$new();
         getList = $q.defer();
-        getList.$object = [];
+        getList.promise.$object = [];
         scope.page = {};
 
         ctrl = $controller('SmuPFHomeCtrl', {
@@ -25,7 +25,7 @@
               route = r;
               return {
                 'getList': function(){
-                  return getList;
+                  return getList.promise;
                 }
               };
             }
@@ -36,7 +36,7 @@
 
       it('should set the student', function() {
         expect(route).toBe('students');
-        expect(scope.students).toBe(getList.$object);
+        expect(scope.students).toEqual([]);
       });
 
     });
@@ -47,7 +47,7 @@
       beforeEach(inject(function($controller, $rootScope, $q){
         scope = $rootScope.$new();
         get = $q.defer();
-        get.$object = [];
+        get.promise.$object = [];
         scope.page = {};
 
         ctrl = $controller('SmuPFPortfolioCtrl', {
@@ -61,7 +61,7 @@
               return {
                 'get': function(i) {
                   id = i;
-                  return get;
+                  return get.promise;
                 }
               };
             }
@@ -73,7 +73,7 @@
       it('should set the greeting', function() {
         expect(route).toBe('students');
         expect(id).toBe(1);
-        expect(scope.portfolio).toBe(get.$object);
+        expect(scope.portfolio).toEqual([]);
       });
 
     });
