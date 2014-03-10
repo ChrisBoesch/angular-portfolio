@@ -38,7 +38,7 @@ angular.module("partials/smuPortFolio/charts/bars.html", []).run(["$templateCach
     "    ng-attr-transform=\"translate({{legendScale(name)}},{{layout.height}})\"\n" +
     "  >\n" +
     "    <rect ng-class=\"translate(name)|dash\" y=\"-2em\" width=\"1em\" height=\"1em\"/>\n" +
-    "    <text y=\"-1.5em\" x=\"2em\">{{name}}</text>\n" +
+    "    <text y=\"-1.5em\" x=\"2em\">{{translate(name)}}</text>\n" +
     "  </g>\n" +
     "\n" +
     "  <g class=\"axis y-axis\">\n" +
