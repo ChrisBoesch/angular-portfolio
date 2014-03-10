@@ -138,6 +138,9 @@ angular.module("partials/smuPortFolio/exam.html", []).run(["$templateCache", fun
 angular.module("partials/smuPortFolio/home.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("partials/smuPortFolio/home.html",
     "<div class=\"col-md-12\">\n" +
+    "  <p ng-if=\"loading\" class=\"alert alert-info\">Loading student's portfololio list...</p>\n" +
+    "  <p ng-if=\"loadingError\" class=\"alert alert-danger\" ng-bind=\"loadingError\"></p>\n" +
+    "  \n" +
     "  <ul>\n" +
     "    <li ng-repeat=\"student in students\">\n" +
     "      <a ng-href=\"#/portfolio/{{student.id}}\">{{student.firstName}} {{student.lastName}}</a>\n" +
@@ -148,7 +151,13 @@ angular.module("partials/smuPortFolio/home.html", []).run(["$templateCache", fun
 
 angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("partials/smuPortFolio/portfolio.html",
-    "<div class=\"col-md-8\">\n" +
+    "<div class=\"col-md-12\">\n" +
+    "  <p ng-if=\"loading\" class=\"alert alert-info\">Loading student's portfololio list...</p>\n" +
+    "  <p ng-if=\"loadingError\" class=\"alert alert-danger\" ng-bind=\"loadingError\"></p>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div class=\"col-md-8\" ng-if=\"portfolioLoaded\">\n" +
+    "\n" +
     "  <div class=\"row\">\n" +
     "\n" +
     "    <div class=\"col-md-6\">\n" +
@@ -185,7 +194,7 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
     "\n" +
     "</div>\n" +
     "\n" +
-    "<div class=\"col-md-4 side-bar\">\n" +
+    "<div class=\"col-md-4 side-bar\" ng-if=\"portfolioLoaded\">\n" +
     "\n" +
     "  <img ng-src=\"{{portfolio.student.photo}}\" alt=\"student portrait\" class=\"img-thumbnail\"/>\n" +
     "  <h3>\n" +
@@ -411,7 +420,6 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
       $scope.log = {isLoggedIn: null};
       smuPFUser().then(function(data) {
         window.jQuery.extend($scope.log, data);
-        return data;
       });
     }]).
 
@@ -422,8 +430,27 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
      *
      */
     controller('SmuPFHomeCtrl', ['$scope', 'smuPFApi', function($scope, smuPFApi) {
+      var students = smuPFApi.all('students').getList();
+
       $scope.page.title = "students";
-      $scope.students = smuPFApi.all('students').getList().$object;
+      $scope.students = students.$object;
+      $scope.loading = true;
+      $scope.loadingError = "";
+
+      students.catch(function(resp) {
+        var code = resp.status,
+          msgs = {
+            401: "You need to log in to list the student's portfolios.",
+            403: "Only member of the staffs can list the student's portfolios.",
+            'default': "There was an error loading student's portfolios."
+          };
+
+        $scope.loadingError = msgs[code] ? msgs[code] : msgs['default'];
+
+      })['finally'](function() {
+        $scope.loading = false;
+      });
+
     }]).
 
     /**
@@ -435,10 +462,30 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
      *
      */
     controller('SmuPFPortfolioCtrl', ['$scope', '$routeParams', 'smuPFPortfolioApi', function($scope, $routeParams, api) {
-      var studentId = $routeParams.studentId;
+      var studentId = $routeParams.studentId,
+        portfolio = api.all('students').get(studentId);
 
       $scope.page.title = "Results and Evaluations";
-      $scope.portfolio = api.all('students').get(studentId).$object;
+      $scope.loading = true;
+      $scope.portfolioLoaded = false;
+      $scope.loadingError = "";
+      $scope.portfolio = portfolio.$object;
+
+      portfolio.then(function() {
+        $scope.portfolioLoaded = true;
+      }).catch(function(resp) {
+        var code = resp.status,
+          msgs = {
+            401: "You need to log in to visit a portfolios.",
+            403: "Only member of the staffs can visit someone else portfolios.",
+            404: "The portfolio could not be found.",
+            'default': "There was an error loading this portfolio."
+          };
+
+        $scope.loadingError = msgs[code] ? msgs[code] : msgs['default'];
+      })['finally'](function() {
+        $scope.loading = false;
+      });
     }]).
 
     /**

@@ -1,4 +1,10 @@
-<div class="col-md-8">
+<div class="col-md-12">
+  <p ng-if="loading" class="alert alert-info">Loading student's portfololio list...</p>
+  <p ng-if="loadingError" class="alert alert-danger" ng-bind="loadingError"></p>
+</div>
+
+<div class="col-md-8" ng-if="portfolioLoaded">
+
   <div class="row">
 
     <div class="col-md-6">
@@ -35,7 +41,7 @@
 
 </div>
 
-<div class="col-md-4 side-bar">
+<div class="col-md-4 side-bar" ng-if="portfolioLoaded">
 
   <img ng-src="{{portfolio.student.photo}}" alt="student portrait" class="img-thumbnail"/>
   <h3>

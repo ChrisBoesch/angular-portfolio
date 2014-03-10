@@ -127,6 +127,9 @@ angular.module("partials/smuPortFolio/exam.html", []).run(["$templateCache", fun
 angular.module("partials/smuPortFolio/home.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("partials/smuPortFolio/home.html",
     "<div class=\"col-md-12\">\n" +
+    "  <p ng-if=\"loading\" class=\"alert alert-info\">Loading student's portfololio list...</p>\n" +
+    "  <p ng-if=\"loadingError\" class=\"alert alert-danger\" ng-bind=\"loadingError\"></p>\n" +
+    "  \n" +
     "  <ul>\n" +
     "    <li ng-repeat=\"student in students\">\n" +
     "      <a ng-href=\"#/portfolio/{{student.id}}\">{{student.firstName}} {{student.lastName}}</a>\n" +
@@ -137,7 +140,13 @@ angular.module("partials/smuPortFolio/home.html", []).run(["$templateCache", fun
 
 angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("partials/smuPortFolio/portfolio.html",
-    "<div class=\"col-md-8\">\n" +
+    "<div class=\"col-md-12\">\n" +
+    "  <p ng-if=\"loading\" class=\"alert alert-info\">Loading student's portfololio list...</p>\n" +
+    "  <p ng-if=\"loadingError\" class=\"alert alert-danger\" ng-bind=\"loadingError\"></p>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div class=\"col-md-8\" ng-if=\"portfolioLoaded\">\n" +
+    "\n" +
     "  <div class=\"row\">\n" +
     "\n" +
     "    <div class=\"col-md-6\">\n" +
@@ -174,7 +183,7 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
     "\n" +
     "</div>\n" +
     "\n" +
-    "<div class=\"col-md-4 side-bar\">\n" +
+    "<div class=\"col-md-4 side-bar\" ng-if=\"portfolioLoaded\">\n" +
     "\n" +
     "  <img ng-src=\"{{portfolio.student.photo}}\" alt=\"student portrait\" class=\"img-thumbnail\"/>\n" +
     "  <h3>\n" +
