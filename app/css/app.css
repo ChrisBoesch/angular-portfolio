@@ -5,3 +5,8 @@
 div.evaluation .row {
   height: 300px;
 }
+
+.login > p {
+  margin-top: 38px;
+  text-align: right;
+}
