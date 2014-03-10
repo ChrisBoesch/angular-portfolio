@@ -4,6 +4,17 @@
   angular.module('smuPortFolio.controllers', ['smuPortFolio.services']).
 
     /**
+     * Should fetch login info and update scope.log with it
+     */
+    controller('smuPFLoginInfoCtrl', ['$scope', 'smuPFUser', '$window', function($scope, smuPFUser, window) {
+      $scope.log = {isLoggedIn: null};
+      smuPFUser().then(function(data) {
+        window.jQuery.extend($scope.log, data);
+        return data;
+      });
+    }]).
+
+    /**
      * Should set:
      *
      * - set a list of student

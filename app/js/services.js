@@ -15,6 +15,22 @@
 
   angular.module('smuPortFolio.services', ['smuPortFolio.config', 'restangular']).
 
+    factory('smuPFUser', ['SMU_PL_API_BASE', '$http', '$location', function(SMU_PL_API_BASE, $http, $location) {
+      return function() {
+
+        return $http.get(SMU_PL_API_BASE + '/user?returnUrl=' + btoa($location.absUrl())).then(
+          function(resp) {
+            resp.data.isLoggedIn = true;
+            return resp.data;
+          },
+          function(resp) {
+            resp.data.isLoggedIn = false;
+            return resp.data;
+          }
+        );
+      };
+    }]).
+
     factory('smuPFApi', ['SMU_PL_API_BASE', 'Restangular', function(SMU_PL_API_BASE, Restangular) {
       return Restangular.withConfig(function(RestangularConfigurer) {
         RestangularConfigurer.setBaseUrl(SMU_PL_API_BASE);

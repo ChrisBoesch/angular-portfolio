@@ -191,7 +191,7 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
     "  <h3>\n" +
     "    <span ng-bind=\"portfolio.student.firstName\">Student first name</span>\n" +
     "    <span ng-bind=\"portfolio.student.lastName\">Student last name</span>\n" +
-    "    <small ng-bind=\"portfolio.student.matricule\">student matricule</small>\n" +
+    "    <small ng-bind=\"portfolio.student.id\">student matricule</small>\n" +
     "  </h3>\n" +
     "\n" +
     "</div>\n" +
@@ -319,6 +319,22 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
 
   angular.module('smuPortFolio.services', ['smuPortFolio.config', 'restangular']).
 
+    factory('smuPFUser', ['SMU_PL_API_BASE', '$http', '$location', function(SMU_PL_API_BASE, $http, $location) {
+      return function() {
+
+        return $http.get(SMU_PL_API_BASE + '/user?returnUrl=' + btoa($location.absUrl())).then(
+          function(resp) {
+            resp.data.isLoggedIn = true;
+            return resp.data;
+          },
+          function(resp) {
+            resp.data.isLoggedIn = false;
+            return resp.data;
+          }
+        );
+      };
+    }]).
+
     factory('smuPFApi', ['SMU_PL_API_BASE', 'Restangular', function(SMU_PL_API_BASE, Restangular) {
       return Restangular.withConfig(function(RestangularConfigurer) {
         RestangularConfigurer.setBaseUrl(SMU_PL_API_BASE);
@@ -387,6 +403,17 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
   'use strict';
 
   angular.module('smuPortFolio.controllers', ['smuPortFolio.services']).
+
+    /**
+     * Should fetch login info and update scope.log with it
+     */
+    controller('smuPFLoginInfoCtrl', ['$scope', 'smuPFUser', '$window', function($scope, smuPFUser, window) {
+      $scope.log = {isLoggedIn: null};
+      smuPFUser().then(function(data) {
+        window.jQuery.extend($scope.log, data);
+        return data;
+      });
+    }]).
 
     /**
      * Should set:
