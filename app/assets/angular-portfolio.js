@@ -200,7 +200,7 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
     "  <h3>\n" +
     "    <span ng-bind=\"portfolio.student.firstName\">Student first name</span>\n" +
     "    <span ng-bind=\"portfolio.student.lastName\">Student last name</span>\n" +
-    "    <small ng-bind=\"portfolio.student.id\">student matricule</small>\n" +
+    "    <small ng-bind=\"portfolio.student.id\">student studentId</small>\n" +
     "  </h3>\n" +
     "\n" +
     "</div>\n" +
