@@ -14,13 +14,13 @@ angular.module("partials/smuPortFolio/charts/bars.html", []).run(["$templateCach
     "  </g>\n" +
     "\n" +
     "  <g class=\"chart\">\n" +
-    "    <g class=\"serie\" ng-repeat=\"serie in data.data\" ng-attr-transform=\"translate({{xScale(serie.name)}},0)\">\n" +
+    "    <g class=\"series\" ng-repeat=\"series in data.data\" ng-attr-transform=\"translate({{xScale(series.name)}},0)\">\n" +
     "      <rect ng-repeat=\"field in xSubScale.domain()\"\n" +
     "        ng-class=\"translate(field)|dash\"\n" +
     "        ng-attr-x=\"{{xSubScale(field)}}\"\n" +
-    "        ng-attr-y=\"{{layout.innerHeight-yScale(serie[field])}}\"\n" +
+    "        ng-attr-y=\"{{layout.innerHeight-yScale(series[field])}}\"\n" +
     "        ng-attr-width=\"{{xSubScale.rangeBand()}}\"\n" +
-    "        ng-attr-height=\"{{yScale(serie[field])}}\"\n" +
+    "        ng-attr-height=\"{{yScale(series[field])}}\"\n" +
     "      />\n" +
     "    </g>\n" +
     "  </g>\n" +
@@ -152,11 +152,11 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
     "    <div class=\"col-md-6\">\n" +
     "      <p ng-if=\"portfolio.examSeries|isEmpty\">You have not taken part to any exam.</p>\n" +
     "\n" +
-    "      <div ng-repeat=\"(_, serie) in portfolio.examSeries\">\n" +
+    "      <div ng-repeat=\"(_, series) in portfolio.examSeries\">\n" +
     "\n" +
-    "        <h3 ng-bind=\"serie.name\">Exam type</h3>\n" +
+    "        <h3 ng-bind=\"series.name\">Exam type</h3>\n" +
     "        <ul>\n" +
-    "          <li ng-repeat=\"(_, exam) in serie.exams\">\n" +
+    "          <li ng-repeat=\"(_, exam) in series.exams\">\n" +
     "            <a ng-href=\"#/portfolio/{{portfolio.id}}/exam/{{exam.id}}\" ng-bind=\"exam.name\">No exam</a>\n" +
     "          </li>\n" +
     "        </ul>\n" +
@@ -167,11 +167,11 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
     "    <div class=\"col-md-6\">\n" +
     "      <p ng-if=\"portfolio.evaluationSeries|isEmpty\">You have not taken part to any evaluation.</p>\n" +
     "\n" +
-    "      <div ng-repeat=\"(_, serie) in portfolio.evaluationSeries\">\n" +
+    "      <div ng-repeat=\"(_, series) in portfolio.evaluationSeries\">\n" +
     "\n" +
-    "        <h3 ng-bind=\"serie.name\">Evaluation type</h3>\n" +
+    "        <h3 ng-bind=\"series.name\">Evaluation type</h3>\n" +
     "        <ul>\n" +
-    "          <li ng-repeat=\"(_, evaluation) in serie.evaluations\">\n" +
+    "          <li ng-repeat=\"(_, evaluation) in series.evaluations\">\n" +
     "            <a ng-href=\"#/portfolio/{{portfolio.id}}/evaluation/{{evaluation.id}}\" ng-bind=\"evaluation.name\">No evaluation</a>\n" +
     "          </li>\n" +
     "        </ul>\n" +

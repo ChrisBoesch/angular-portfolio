@@ -113,16 +113,16 @@ var EVALUATION_RESULTS_TYPE = [
   'Consistently Exceeds'
 ];
 
-_.forEach(EXAMS, function(serie) {
-  _.forEach(serie.exams, function(exam){
+_.forEach(EXAMS, function(series) {
+  _.forEach(series.exams, function(exam){
     var fieldId = 1;
 
     EXAM_RESULTS[exam.id] = {
       id: exam.id,
       name: exam.name,
-      serie: {
-        id: serie.id,
-        name: serie.name
+      series: {
+        id: series.id,
+        name: series.name
       },
       results: {}
     };

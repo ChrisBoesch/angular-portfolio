@@ -10,13 +10,13 @@
   </g>
 
   <g class="chart">
-    <g class="serie" ng-repeat="serie in data.data" ng-attr-transform="translate({{xScale(serie.name)}},0)">
+    <g class="series" ng-repeat="series in data.data" ng-attr-transform="translate({{xScale(series.name)}},0)">
       <rect ng-repeat="field in xSubScale.domain()"
         ng-class="translate(field)|dash"
         ng-attr-x="{{xSubScale(field)}}"
-        ng-attr-y="{{layout.innerHeight-yScale(serie[field])}}"
+        ng-attr-y="{{layout.innerHeight-yScale(series[field])}}"
         ng-attr-width="{{xSubScale.rangeBand()}}"
-        ng-attr-height="{{yScale(serie[field])}}"
+        ng-attr-height="{{yScale(series[field])}}"
       />
     </g>
   </g>

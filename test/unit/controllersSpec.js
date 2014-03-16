@@ -89,7 +89,7 @@
         results = {
           "id": "10",
           "name": "CP 2",
-          "serie": {
+          "series": {
             "id": "s1",
             "name": "Performance Exams"
           },
