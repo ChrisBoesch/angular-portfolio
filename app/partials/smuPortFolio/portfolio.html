@@ -10,11 +10,11 @@
     <div class="col-md-6">
       <p ng-if="portfolio.examSeries|isEmpty">You have not taken part to any exam.</p>
 
-      <div ng-repeat="(_, serie) in portfolio.examSeries">
+      <div ng-repeat="(_, series) in portfolio.examSeries">
 
-        <h3 ng-bind="serie.name">Exam type</h3>
+        <h3 ng-bind="series.name">Exam type</h3>
         <ul>
-          <li ng-repeat="(_, exam) in serie.exams">
+          <li ng-repeat="(_, exam) in series.exams">
             <a ng-href="#/portfolio/{{portfolio.id}}/exam/{{exam.id}}" ng-bind="exam.name">No exam</a>
           </li>
         </ul>
@@ -25,11 +25,11 @@
     <div class="col-md-6">
       <p ng-if="portfolio.evaluationSeries|isEmpty">You have not taken part to any evaluation.</p>
 
-      <div ng-repeat="(_, serie) in portfolio.evaluationSeries">
+      <div ng-repeat="(_, series) in portfolio.evaluationSeries">
 
-        <h3 ng-bind="serie.name">Evaluation type</h3>
+        <h3 ng-bind="series.name">Evaluation type</h3>
         <ul>
-          <li ng-repeat="(_, evaluation) in serie.evaluations">
+          <li ng-repeat="(_, evaluation) in series.evaluations">
             <a ng-href="#/portfolio/{{portfolio.id}}/evaluation/{{evaluation.id}}" ng-bind="evaluation.name">No evaluation</a>
           </li>
         </ul>
@@ -47,7 +47,7 @@
   <h3>
     <span ng-bind="portfolio.student.firstName">Student first name</span>
     <span ng-bind="portfolio.student.lastName">Student last name</span>
-    <small ng-bind="portfolio.student.id">student matricule</small>
+    <small ng-bind="portfolio.student.id">student studentId</small>
   </h3>
 
 </div>
