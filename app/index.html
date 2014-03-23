@@ -16,8 +16,21 @@
   <div class="container">
     <div class="row">
       <div class="col-md-8">
-        <div class="page-header">
-          <h1 ng-init="page={}" ng-bind="page.title">The Title Goes Here</h1>
+        <div class="page-header row">
+          <div class="col-md-9">
+            <h1 ng-init="page={}" ng-bind="page.title">The Title Goes Here</h1>
+          </div>
+          <div class="col-md-3 login" ng-controller="smuPFLoginInfoCtrl">
+            <p ng-switch on="log.isLoggedIn">
+              <span ng-switch-default>Checking login info...</span>
+              <span ng-switch-when="false">
+                <a ng-href="{{log.loginUrl}}">log in</a>
+              </span>
+              <span ng-switch-when="true">
+                <a ng-href="{{log.logoutUrl}}">log out</a>
+              </span>
+            </p>
+          </div>
         </div>
       </div>
       <div class="col-md-4 side-bar">

@@ -25,13 +25,13 @@ angular.module("partials/smuPortFolio/charts/bars.html", []).run(["$templateCach
     "  </g>\n" +
     "\n" +
     "  <g class=\"chart\">\n" +
-    "    <g class=\"serie\" ng-repeat=\"serie in data.data\" ng-attr-transform=\"translate({{xScale(serie.name)}},0)\">\n" +
+    "    <g class=\"series\" ng-repeat=\"series in data.data\" ng-attr-transform=\"translate({{xScale(series.name)}},0)\">\n" +
     "      <rect ng-repeat=\"field in xSubScale.domain()\"\n" +
     "        ng-class=\"translate(field)|dash\"\n" +
     "        ng-attr-x=\"{{xSubScale(field)}}\"\n" +
-    "        ng-attr-y=\"{{layout.innerHeight-yScale(serie[field])}}\"\n" +
+    "        ng-attr-y=\"{{layout.innerHeight-yScale(series[field])}}\"\n" +
     "        ng-attr-width=\"{{xSubScale.rangeBand()}}\"\n" +
-    "        ng-attr-height=\"{{yScale(serie[field])}}\"\n" +
+    "        ng-attr-height=\"{{yScale(series[field])}}\"\n" +
     "      />\n" +
     "    </g>\n" +
     "  </g>\n" +
@@ -138,6 +138,9 @@ angular.module("partials/smuPortFolio/exam.html", []).run(["$templateCache", fun
 angular.module("partials/smuPortFolio/home.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("partials/smuPortFolio/home.html",
     "<div class=\"col-md-12\">\n" +
+    "  <p ng-if=\"loading\" class=\"alert alert-info\">Loading student's portfololio list...</p>\n" +
+    "  <p ng-if=\"loadingError\" class=\"alert alert-danger\" ng-bind=\"loadingError\"></p>\n" +
+    "  \n" +
     "  <ul>\n" +
     "    <li ng-repeat=\"student in students\">\n" +
     "      <a ng-href=\"#/portfolio/{{student.id}}\">{{student.firstName}} {{student.lastName}}</a>\n" +
@@ -148,17 +151,23 @@ angular.module("partials/smuPortFolio/home.html", []).run(["$templateCache", fun
 
 angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("partials/smuPortFolio/portfolio.html",
-    "<div class=\"col-md-8\">\n" +
+    "<div class=\"col-md-12\">\n" +
+    "  <p ng-if=\"loading\" class=\"alert alert-info\">Loading student's portfololio list...</p>\n" +
+    "  <p ng-if=\"loadingError\" class=\"alert alert-danger\" ng-bind=\"loadingError\"></p>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div class=\"col-md-8\" ng-if=\"portfolioLoaded\">\n" +
+    "\n" +
     "  <div class=\"row\">\n" +
     "\n" +
     "    <div class=\"col-md-6\">\n" +
     "      <p ng-if=\"portfolio.examSeries|isEmpty\">You have not taken part to any exam.</p>\n" +
     "\n" +
-    "      <div ng-repeat=\"(_, serie) in portfolio.examSeries\">\n" +
+    "      <div ng-repeat=\"(_, series) in portfolio.examSeries\">\n" +
     "\n" +
-    "        <h3 ng-bind=\"serie.name\">Exam type</h3>\n" +
+    "        <h3 ng-bind=\"series.name\">Exam type</h3>\n" +
     "        <ul>\n" +
-    "          <li ng-repeat=\"(_, exam) in serie.exams\">\n" +
+    "          <li ng-repeat=\"(_, exam) in series.exams\">\n" +
     "            <a ng-href=\"#/portfolio/{{portfolio.id}}/exam/{{exam.id}}\" ng-bind=\"exam.name\">No exam</a>\n" +
     "          </li>\n" +
     "        </ul>\n" +
@@ -169,11 +178,11 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
     "    <div class=\"col-md-6\">\n" +
     "      <p ng-if=\"portfolio.evaluationSeries|isEmpty\">You have not taken part to any evaluation.</p>\n" +
     "\n" +
-    "      <div ng-repeat=\"(_, serie) in portfolio.evaluationSeries\">\n" +
+    "      <div ng-repeat=\"(_, series) in portfolio.evaluationSeries\">\n" +
     "\n" +
-    "        <h3 ng-bind=\"serie.name\">Evaluation type</h3>\n" +
+    "        <h3 ng-bind=\"series.name\">Evaluation type</h3>\n" +
     "        <ul>\n" +
-    "          <li ng-repeat=\"(_, evaluation) in serie.evaluations\">\n" +
+    "          <li ng-repeat=\"(_, evaluation) in series.evaluations\">\n" +
     "            <a ng-href=\"#/portfolio/{{portfolio.id}}/evaluation/{{evaluation.id}}\" ng-bind=\"evaluation.name\">No evaluation</a>\n" +
     "          </li>\n" +
     "        </ul>\n" +
@@ -185,13 +194,13 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
     "\n" +
     "</div>\n" +
     "\n" +
-    "<div class=\"col-md-4 side-bar\">\n" +
+    "<div class=\"col-md-4 side-bar\" ng-if=\"portfolioLoaded\">\n" +
     "\n" +
     "  <img ng-src=\"{{portfolio.student.photo}}\" alt=\"student portrait\" class=\"img-thumbnail\"/>\n" +
     "  <h3>\n" +
     "    <span ng-bind=\"portfolio.student.firstName\">Student first name</span>\n" +
     "    <span ng-bind=\"portfolio.student.lastName\">Student last name</span>\n" +
-    "    <small ng-bind=\"portfolio.student.matricule\">student matricule</small>\n" +
+    "    <small ng-bind=\"portfolio.student.id\">student studentId</small>\n" +
     "  </h3>\n" +
     "\n" +
     "</div>\n" +
@@ -319,6 +328,22 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
 
   angular.module('smuPortFolio.services', ['smuPortFolio.config', 'restangular']).
 
+    factory('smuPFUser', ['SMU_PL_API_BASE', '$http', '$location', function(SMU_PL_API_BASE, $http, $location) {
+      return function() {
+
+        return $http.get(SMU_PL_API_BASE + '/user?returnUrl=' + btoa($location.absUrl())).then(
+          function(resp) {
+            resp.data.isLoggedIn = true;
+            return resp.data;
+          },
+          function(resp) {
+            resp.data.isLoggedIn = false;
+            return resp.data;
+          }
+        );
+      };
+    }]).
+
     factory('smuPFApi', ['SMU_PL_API_BASE', 'Restangular', function(SMU_PL_API_BASE, Restangular) {
       return Restangular.withConfig(function(RestangularConfigurer) {
         RestangularConfigurer.setBaseUrl(SMU_PL_API_BASE);
@@ -389,14 +414,43 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
   angular.module('smuPortFolio.controllers', ['smuPortFolio.services']).
 
     /**
+     * Should fetch login info and update scope.log with it
+     */
+    controller('smuPFLoginInfoCtrl', ['$scope', 'smuPFUser', '$window', function($scope, smuPFUser, window) {
+      $scope.log = {isLoggedIn: null};
+      smuPFUser().then(function(data) {
+        window.jQuery.extend($scope.log, data);
+      });
+    }]).
+
+    /**
      * Should set:
      *
      * - set a list of student
      *
      */
     controller('SmuPFHomeCtrl', ['$scope', 'smuPFApi', function($scope, smuPFApi) {
+      var students = smuPFApi.all('students').getList();
+
       $scope.page.title = "students";
-      $scope.students = smuPFApi.all('students').getList().$object;
+      $scope.students = students.$object;
+      $scope.loading = true;
+      $scope.loadingError = "";
+
+      students.catch(function(resp) {
+        var code = resp.status,
+          msgs = {
+            401: "You need to log in to list the student's portfolios.",
+            403: "Only member of the staffs can list the student's portfolios.",
+            'default': "There was an error loading student's portfolios."
+          };
+
+        $scope.loadingError = msgs[code] ? msgs[code] : msgs['default'];
+
+      })['finally'](function() {
+        $scope.loading = false;
+      });
+
     }]).
 
     /**
@@ -408,10 +462,30 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
      *
      */
     controller('SmuPFPortfolioCtrl', ['$scope', '$routeParams', 'smuPFPortfolioApi', function($scope, $routeParams, api) {
-      var studentId = $routeParams.studentId;
+      var studentId = $routeParams.studentId,
+        portfolio = api.all('students').get(studentId);
 
       $scope.page.title = "Results and Evaluations";
-      $scope.portfolio = api.all('students').get(studentId).$object;
+      $scope.loading = true;
+      $scope.portfolioLoaded = false;
+      $scope.loadingError = "";
+      $scope.portfolio = portfolio.$object;
+
+      portfolio.then(function() {
+        $scope.portfolioLoaded = true;
+      }).catch(function(resp) {
+        var code = resp.status,
+          msgs = {
+            401: "You need to log in to visit a portfolios.",
+            403: "Only member of the staffs can visit someone else portfolios.",
+            404: "The portfolio could not be found.",
+            'default': "There was an error loading this portfolio."
+          };
+
+        $scope.loadingError = msgs[code] ? msgs[code] : msgs['default'];
+      })['finally'](function() {
+        $scope.loading = false;
+      });
     }]).
 
     /**

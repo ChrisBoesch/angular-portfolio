@@ -90,9 +90,9 @@
         function newExamResults(serieId, examId, topicId, topicName, studentIds) {
             var r = {
                 id: [serieId, examId, topicId].join('-'),
-                serie: {
+                series: {
                     id: 's' + serieId,
-                    name: "Serie " + serieId
+                    name: "Series " + serieId
                 },
                 exam: {
                     id: 's' + serieId + 'e' + examId,
@@ -138,9 +138,9 @@
         function newEvaluationResults(serieId, evaluationId, topicId, topicName, studentIds) {
             var r = {
                 id: [serieId, evaluationId, topicId].join('-'),
-                serie: {
+                series: {
                     id: 's' + serieId,
-                    name: "Serie " + serieId
+                    name: "Series " + serieId
                 },
                 evaluation: {
                     id: 's' + serieId + 'ev' + evaluationId,

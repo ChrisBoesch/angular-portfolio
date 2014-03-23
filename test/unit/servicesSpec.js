@@ -26,8 +26,8 @@
         beforeEach(function() {
           students = {
             'students': [
-              {fullName: 'Alice Smith', id: 1, matricule: 'X2010200001', photo: 'http://placehold.it/300x400'},
-              {fullName: 'Bob Taylor', id: 2, matricule: 'X2010200002', photo: 'http://placehold.it/300x400'},
+              {fullName: 'Alice Smith', id: 1, studentId: 'X2010200001', photo: 'http://placehold.it/300x400'},
+              {fullName: 'Bob Taylor', id: 2, studentId: 'X2010200002', photo: 'http://placehold.it/300x400'},
             ]
           };
         });
@@ -45,10 +45,10 @@
 
           expect(data[0].id).toBe(1);
           expect(data[0].fullName).toBe('Alice Smith');
-          expect(data[0].matricule).toBe('X2010200001');
+          expect(data[0].studentId).toBe('X2010200001');
           expect(data[1].id).toBe(2);
           expect(data[1].fullName).toBe('Bob Taylor');
-          expect(data[1].matricule).toBe('X2010200002');
+          expect(data[1].studentId).toBe('X2010200002');
         });
       });
     });
@@ -66,13 +66,13 @@
 
         beforeEach(function(){
           students = [
-            {fullName: 'Alice Smith', id: 1, matricule: 'X2010200001', photo: 'http://placehold.it/300x400'},
-            {fullName: 'Bob Taylor', id: 2, matricule: 'X2010200002', photo: 'http://placehold.it/300x400'},
+            {fullName: 'Alice Smith', id: 1, studentId: 'X2010200001', photo: 'http://placehold.it/300x400'},
+            {fullName: 'Bob Taylor', id: 2, studentId: 'X2010200002', photo: 'http://placehold.it/300x400'},
           ];
           alice = {
             "fullName": "Alice Smith",
             "id": 1,
-            "matricule": "X2010200001",
+            "studentId": "X2010200001",
             "photo": "http://placehold.it/300x400&text=portrait",
             "exams": {
               "Some Exam Preparation": [
@@ -124,7 +124,7 @@
 
           expect(data.id).toBe(1);
           expect(data.fullName).toBe('Alice Smith');
-          expect(data.matricule).toBe('X2010200001');
+          expect(data.studentId).toBe('X2010200001');
 
         });
 

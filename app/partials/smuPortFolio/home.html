@@ -1,4 +1,7 @@
 <div class="col-md-12">
+  <p ng-if="loading" class="alert alert-info">Loading student's portfololio list...</p>
+  <p ng-if="loadingError" class="alert alert-danger" ng-bind="loadingError"></p>
+  
   <ul>
     <li ng-repeat="student in students">
       <a ng-href="#/portfolio/{{student.id}}">{{student.firstName}} {{student.lastName}}</a>

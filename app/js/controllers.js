@@ -4,14 +4,43 @@
   angular.module('smuPortFolio.controllers', ['smuPortFolio.services']).
 
     /**
+     * Should fetch login info and update scope.log with it
+     */
+    controller('smuPFLoginInfoCtrl', ['$scope', 'smuPFUser', '$window', function($scope, smuPFUser, window) {
+      $scope.log = {isLoggedIn: null};
+      smuPFUser().then(function(data) {
+        window.jQuery.extend($scope.log, data);
+      });
+    }]).
+
+    /**
      * Should set:
      *
      * - set a list of student
      *
      */
     controller('SmuPFHomeCtrl', ['$scope', 'smuPFApi', function($scope, smuPFApi) {
+      var students = smuPFApi.all('students').getList();
+
       $scope.page.title = "students";
-      $scope.students = smuPFApi.all('students').getList().$object;
+      $scope.students = students.$object;
+      $scope.loading = true;
+      $scope.loadingError = "";
+
+      students.catch(function(resp) {
+        var code = resp.status,
+          msgs = {
+            401: "You need to log in to list the student's portfolios.",
+            403: "Only member of the staffs can list the student's portfolios.",
+            'default': "There was an error loading student's portfolios."
+          };
+
+        $scope.loadingError = msgs[code] ? msgs[code] : msgs['default'];
+
+      })['finally'](function() {
+        $scope.loading = false;
+      });
+
     }]).
 
     /**
@@ -23,10 +52,30 @@
      *
      */
     controller('SmuPFPortfolioCtrl', ['$scope', '$routeParams', 'smuPFPortfolioApi', function($scope, $routeParams, api) {
-      var studentId = $routeParams.studentId;
+      var studentId = $routeParams.studentId,
+        portfolio = api.all('students').get(studentId);
 
       $scope.page.title = "Results and Evaluations";
-      $scope.portfolio = api.all('students').get(studentId).$object;
+      $scope.loading = true;
+      $scope.portfolioLoaded = false;
+      $scope.loadingError = "";
+      $scope.portfolio = portfolio.$object;
+
+      portfolio.then(function() {
+        $scope.portfolioLoaded = true;
+      }).catch(function(resp) {
+        var code = resp.status,
+          msgs = {
+            401: "You need to log in to visit a portfolios.",
+            403: "Only member of the staffs can visit someone else portfolios.",
+            404: "The portfolio could not be found.",
+            'default': "There was an error loading this portfolio."
+          };
+
+        $scope.loadingError = msgs[code] ? msgs[code] : msgs['default'];
+      })['finally'](function() {
+        $scope.loading = false;
+      });
     }]).
 
     /**
