@@ -3,6 +3,41 @@
 
   angular.module('smuPortFolio.directives', []).
 
+    directive('smupfSvgContainer', function() {
+      return {
+        restrict: 'E',
+        transclude: true,
+        scope: {},
+        controller: function($scope){
+
+          $scope.container = {
+            'display': 'inline-block',
+            'position': 'relative',
+            'width': '100%',
+            'padding-bottom': '100%',
+            'vertical-align': 'middle',
+            'overflow': 'hidden'
+          };
+
+          this.setRatio = function(ratio) {
+            console.log(ratio);
+            $scope.container['padding-bottom'] = (ratio * 100) + '%';
+          };
+
+        },
+        template: '<div ng-transclude ng-style="container"></div>',
+        link: function(scope, element) {
+          element.find('svg').css({
+            'display': 'inline-block',
+            'position': 'absolute',
+            'top': '0',
+            'left': '0'
+          });
+        }
+      };
+    }).
+
+
     /**
      * Directive to set the a `svga element `viewBox` attribute
      * from values from the scope.
@@ -25,10 +60,11 @@
      */
     directive('smupfViewbox', function(){
       return {
+        require: '?^smupfSvgContainer',
         scope: {
           'viewBox': '=?smupfViewbox'
         },
-        link: function(scope, element) {
+        link: function(scope, element, attrs, containerCtrl) {
 
           element.get(0).setAttribute('preserveAspectRatio', 'xMinYMin meet');
 
@@ -39,6 +75,10 @@
               'viewBox',
               [-vb.margin.left, -vb.margin.top, vb.width, vb.height].join(' ')
             );
+
+            if (containerCtrl && containerCtrl.setRatio) {
+              containerCtrl.setRatio(vb.height / vb.width);
+            }
 
           });
         }

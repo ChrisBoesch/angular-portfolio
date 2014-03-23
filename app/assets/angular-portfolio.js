@@ -14,53 +14,55 @@
 angular.module("partials/smuPortFolio/charts/bars.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("partials/smuPortFolio/charts/bars.html",
     "<h4>{{data.topic.name}}</h4>\n" +
-    "<svg smupf-viewbox=\"layout\">\n" +
+    "<smupf-svg-container>\n" +
+    "  <svg smupf-viewbox=\"layout\">\n" +
     "\n" +
-    "  <g class=\"rulers\">\n" +
-    "    <line ng-repeat=\"v in yAxisScale.ticks(10)\"\n" +
-    "      ng-if=\"!$first\"\n" +
-    "      ng-attr-transform=\"translate(0,{{yAxisScale(v)}})\"\n" +
-    "      ng-attr-x2=\"{{layout.innerWidth}}\"\n" +
-    "    />\n" +
-    "  </g>\n" +
-    "\n" +
-    "  <g class=\"chart\">\n" +
-    "    <g class=\"series\" ng-repeat=\"series in data.data\" ng-attr-transform=\"translate({{xScale(series.name)}},0)\">\n" +
-    "      <rect ng-repeat=\"field in xSubScale.domain()\"\n" +
-    "        ng-class=\"translate(field)|dash\"\n" +
-    "        ng-attr-x=\"{{xSubScale(field)}}\"\n" +
-    "        ng-attr-y=\"{{layout.innerHeight-yScale(series[field])}}\"\n" +
-    "        ng-attr-width=\"{{xSubScale.rangeBand()}}\"\n" +
-    "        ng-attr-height=\"{{yScale(series[field])}}\"\n" +
+    "    <g class=\"rulers\">\n" +
+    "      <line ng-repeat=\"v in yAxisScale.ticks(10)\"\n" +
+    "        ng-if=\"!$first\"\n" +
+    "        ng-attr-transform=\"translate(0,{{yAxisScale(v)}})\"\n" +
+    "        ng-attr-x2=\"{{layout.innerWidth}}\"\n" +
     "      />\n" +
     "    </g>\n" +
-    "  </g>\n" +
     "\n" +
-    "  <g class=\"axis x-axis\" ng-attr-transform=\"translate(0, {{layout.innerHeight}})\">\n" +
-    "    <line ng-attr-x2=\"{{layout.innerWidth}}\"/>\n" +
-    "    <g class=\"tick\" ng-repeat=\"name in xScale.domain()\" ng-attr-transform=\"translate({{xScale(name)}},0)\">\n" +
-    "      <line y2=\"7\" ng-attr-transform=\"translate({{xScale.rangeBand()}},0)\"/>\n" +
-    "      <text ng-attr-x=\"{{xScale.rangeBand()/2}}\" dy=\"10\">{{name}}</text>\n" +
+    "    <g class=\"chart\">\n" +
+    "      <g class=\"series\" ng-repeat=\"series in data.data\" ng-attr-transform=\"translate({{xScale(series.name)}},0)\">\n" +
+    "        <rect ng-repeat=\"field in xSubScale.domain()\"\n" +
+    "          ng-class=\"translate(field)|dash\"\n" +
+    "          ng-attr-x=\"{{xSubScale(field)}}\"\n" +
+    "          ng-attr-y=\"{{layout.innerHeight-yScale(series[field])}}\"\n" +
+    "          ng-attr-width=\"{{xSubScale.rangeBand()}}\"\n" +
+    "          ng-attr-height=\"{{yScale(series[field])}}\"\n" +
+    "        />\n" +
+    "      </g>\n" +
     "    </g>\n" +
-    "  </g>\n" +
     "\n" +
-    "  <g class=\"legend\"\n" +
-    "    ng-repeat=\"name in legendScale.domain()\"\n" +
-    "    ng-attr-transform=\"translate({{legendScale(name)}},{{layout.height}})\"\n" +
-    "  >\n" +
-    "    <rect ng-class=\"translate(name)|dash\" y=\"-2em\" width=\"1em\" height=\"1em\"/>\n" +
-    "    <text y=\"-1.5em\" x=\"2em\">{{translate(name)}}</text>\n" +
-    "  </g>\n" +
-    "\n" +
-    "  <g class=\"axis y-axis\">\n" +
-    "    <line ng-attr-y2=\"{{layout.innerHeight}}\"/>\n" +
-    "    <g class=\"tick\" ng-repeat=\"v in yAxisScale.ticks(10)\" ng-attr-transform=\"translate(0,{{yAxisScale(v)}})\">\n" +
-    "      <line x2=\"-7\"/>\n" +
-    "      <text dx=\"-12\">{{v|percent}}</text>\n" +
+    "    <g class=\"axis x-axis\" ng-attr-transform=\"translate(0, {{layout.innerHeight}})\">\n" +
+    "      <line ng-attr-x2=\"{{layout.innerWidth}}\"/>\n" +
+    "      <g class=\"tick\" ng-repeat=\"name in xScale.domain()\" ng-attr-transform=\"translate({{xScale(name)}},0)\">\n" +
+    "        <line y2=\"7\" ng-attr-transform=\"translate({{xScale.rangeBand()}},0)\"/>\n" +
+    "        <text ng-attr-x=\"{{xScale.rangeBand()/2}}\" dy=\"10\">{{name}}</text>\n" +
+    "      </g>\n" +
     "    </g>\n" +
-    "  </g>\n" +
     "\n" +
-    "</svg>");
+    "    <g class=\"legend\"\n" +
+    "      ng-repeat=\"name in legendScale.domain()\"\n" +
+    "      ng-attr-transform=\"translate({{legendScale(name)}},{{layout.height}})\"\n" +
+    "    >\n" +
+    "      <rect ng-class=\"translate(name)|dash\" y=\"-2em\" width=\"1em\" height=\"1em\"/>\n" +
+    "      <text y=\"-1.5em\" x=\"2em\">{{translate(name)}}</text>\n" +
+    "    </g>\n" +
+    "\n" +
+    "    <g class=\"axis y-axis\">\n" +
+    "      <line ng-attr-y2=\"{{layout.innerHeight}}\"/>\n" +
+    "      <g class=\"tick\" ng-repeat=\"v in yAxisScale.ticks(10)\" ng-attr-transform=\"translate(0,{{yAxisScale(v)}})\">\n" +
+    "        <line x2=\"-7\"/>\n" +
+    "        <text dx=\"-12\">{{v|percent}}</text>\n" +
+    "      </g>\n" +
+    "    </g>\n" +
+    "\n" +
+    "  </svg>\n" +
+    "</smupf-svg-container>");
 }]);
 
 angular.module("partials/smuPortFolio/evaluation.html", []).run(["$templateCache", function($templateCache) {
@@ -82,35 +84,37 @@ angular.module("partials/smuPortFolio/evaluation.html", []).run(["$templateCache
 angular.module("partials/smuPortFolio/exam.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("partials/smuPortFolio/exam.html",
     "<div class=\"col-md-8\">\n" +
-    "  <svg smupf-viewbox=\"layout\">\n" +
+    "  <smupf-svg-container>\n" +
+    "    <svg smupf-viewbox=\"layout\">\n" +
     "\n" +
-    "    <g class=\"chart\">\n" +
-    "      <rect class=\"border\" ng-attr-width=\"{{layout.innerWidth}}\" ng-attr-height=\"{{layout.innerHeight}}\"/>\n" +
-    "      <line class=\"mean\" ng-attr-transform=\"translate({{layout.innerWidth/2}},0)\" ng-attr-y2=\"{{layout.innerHeight}}\"/>\n" +
+    "      <g class=\"chart\">\n" +
+    "        <rect class=\"border\" ng-attr-width=\"{{layout.innerWidth}}\" ng-attr-height=\"{{layout.innerHeight}}\"/>\n" +
+    "        <line class=\"mean\" ng-attr-transform=\"translate({{layout.innerWidth/2}},0)\" ng-attr-y2=\"{{layout.innerHeight}}\"/>\n" +
     "\n" +
-    "      <g class=\"results\" ng-repeat=\"(_, r) in exam.results\" ng-attr-transform=\"translate(0,{{yScale(r.topic.name)}})\">\n" +
-    "        <text ng-attr-transform=\"translate({{-layout.margin.left+10}},0)\">\n" +
-    "          {{r.topic.name}}\n" +
-    "        </text>\n" +
-    "        <line ng-attr-x1=\"{{xScale(r.data.min)}}\" ng-attr-x2=\"{{xScale(r.data.max)}}\"/>\n" +
-    "        <line class=\"min\" ng-attr-transform=\"translate({{xScale(r.data.min)}})\" y1=\"-5\" y2=\"5\"/>\n" +
-    "        <line class=\"max\" ng-attr-transform=\"translate({{xScale(r.data.max)}})\" y1=\"-5\" y2=\"5\"/>\n" +
-    "        <rect ng-attr-transform=\"translate({{xScale(r.data.mean)-4}},-4)\" width=\"8\" height=\"8\"/>\n" +
+    "        <g class=\"results\" ng-repeat=\"(_, r) in exam.results\" ng-attr-transform=\"translate(0,{{yScale(r.topic.name)}})\">\n" +
+    "          <text ng-attr-transform=\"translate({{-layout.margin.left+10}},0)\">\n" +
+    "            {{r.topic.name}}\n" +
+    "          </text>\n" +
+    "          <line ng-attr-x1=\"{{xScale(r.data.min)}}\" ng-attr-x2=\"{{xScale(r.data.max)}}\"/>\n" +
+    "          <line class=\"min\" ng-attr-transform=\"translate({{xScale(r.data.min)}})\" y1=\"-5\" y2=\"5\"/>\n" +
+    "          <line class=\"max\" ng-attr-transform=\"translate({{xScale(r.data.max)}})\" y1=\"-5\" y2=\"5\"/>\n" +
+    "          <rect ng-attr-transform=\"translate({{xScale(r.data.mean)-4}},-4)\" width=\"8\" height=\"8\"/>\n" +
+    "        </g>\n" +
     "      </g>\n" +
-    "    </g>\n" +
     "\n" +
-    "    <g class=\"axis x-axis\" ng-attr-transform=\"translate(0,{{layout.innerHeight}})\">\n" +
-    "      <line ng-attr-x2=\"{{layout.innerWidth}}\"/>\n" +
-    "      <g class=\"tick\" ng-repeat=\"t in ticks\" ng-attr-transform=\"translate({{xScale(t)}},0)\">\n" +
-    "        <line y2=\"5\"/>\n" +
+    "      <g class=\"axis x-axis\" ng-attr-transform=\"translate(0,{{layout.innerHeight}})\">\n" +
+    "        <line ng-attr-x2=\"{{layout.innerWidth}}\"/>\n" +
+    "        <g class=\"tick\" ng-repeat=\"t in ticks\" ng-attr-transform=\"translate({{xScale(t)}},0)\">\n" +
+    "          <line y2=\"5\"/>\n" +
+    "        </g>\n" +
+    "        <g class=\"main-tick\" ng-repeat=\"t in [-2, -1, 0, 1, 2]\" ng-attr-transform=\"translate({{xScale(t)}},0)\">\n" +
+    "          <line y1=\"5\" y2=\"8\"/>\n" +
+    "          <text dy=\"12\">{{t}}</text>\n" +
+    "        </g>\n" +
     "      </g>\n" +
-    "      <g class=\"main-tick\" ng-repeat=\"t in [-2, -1, 0, 1, 2]\" ng-attr-transform=\"translate({{xScale(t)}},0)\">\n" +
-    "        <line y1=\"5\" y2=\"8\"/>\n" +
-    "        <text dy=\"12\">{{t}}</text>\n" +
-    "      </g>\n" +
-    "    </g>\n" +
     "\n" +
-    "  </svg>\n" +
+    "    </svg>\n" +
+    "  </smupf-svg-container>\n" +
     "</div>\n" +
     "\n" +
     "<div class=\"col-md-4\">\n" +
@@ -211,6 +215,41 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
 
   angular.module('smuPortFolio.directives', []).
 
+    directive('smupfSvgContainer', function() {
+      return {
+        restrict: 'E',
+        transclude: true,
+        scope: {},
+        controller: function($scope){
+
+          $scope.container = {
+            'display': 'inline-block',
+            'position': 'relative',
+            'width': '100%',
+            'padding-bottom': '100%',
+            'vertical-align': 'middle',
+            'overflow': 'hidden'
+          };
+
+          this.setRatio = function(ratio) {
+            console.log(ratio);
+            $scope.container['padding-bottom'] = (ratio * 100) + '%';
+          };
+
+        },
+        template: '<div ng-transclude ng-style="container"></div>',
+        link: function(scope, element) {
+          element.find('svg').css({
+            'display': 'inline-block',
+            'position': 'absolute',
+            'top': '0',
+            'left': '0'
+          });
+        }
+      };
+    }).
+
+
     /**
      * Directive to set the a `svga element `viewBox` attribute
      * from values from the scope.
@@ -233,10 +272,11 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
      */
     directive('smupfViewbox', function(){
       return {
+        require: '?^smupfSvgContainer',
         scope: {
           'viewBox': '=?smupfViewbox'
         },
-        link: function(scope, element) {
+        link: function(scope, element, attrs, containerCtrl) {
 
           element.get(0).setAttribute('preserveAspectRatio', 'xMinYMin meet');
 
@@ -247,6 +287,10 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
               'viewBox',
               [-vb.margin.left, -vb.margin.top, vb.width, vb.height].join(' ')
             );
+
+            if (containerCtrl && containerCtrl.setRatio) {
+              containerCtrl.setRatio(vb.height / vb.width);
+            }
 
           });
         }
