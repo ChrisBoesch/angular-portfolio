@@ -241,6 +241,17 @@ app.get('/portfolio/students/:studentId/evaluations/:evaluationId', function(req
 
 });
 
+app.get('/user', function(req, res){
+  setTimeout(function(){
+    res.send(
+      {
+        "isAdmin": true,
+        "logoutUrl": "/",
+        "name": "Admin"
+      }
+    );
+  }, DELAY);
+});
 
 app.listen(9090);
 
