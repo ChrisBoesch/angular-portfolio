@@ -1,33 +1,35 @@
 <div class="col-md-8">
-  <svg smupf-viewbox="layout">
+  <smupf-svg-container>
+    <svg smupf-viewbox="layout">
 
-    <g class="chart">
-      <rect class="border" ng-attr-width="{{layout.innerWidth}}" ng-attr-height="{{layout.innerHeight}}"/>
-      <line class="mean" ng-attr-transform="translate({{layout.innerWidth/2}},0)" ng-attr-y2="{{layout.innerHeight}}"/>
+      <g class="chart">
+        <rect class="border" ng-attr-width="{{layout.innerWidth}}" ng-attr-height="{{layout.innerHeight}}"/>
+        <line class="mean" ng-attr-transform="translate({{layout.innerWidth/2}},0)" ng-attr-y2="{{layout.innerHeight}}"/>
 
-      <g class="results" ng-repeat="(_, r) in exam.results" ng-attr-transform="translate(0,{{yScale(r.topic.name)}})">
-        <text ng-attr-transform="translate({{-layout.margin.left+10}},0)">
-          {{r.topic.name}}
-        </text>
-        <line ng-attr-x1="{{xScale(r.data.min)}}" ng-attr-x2="{{xScale(r.data.max)}}"/>
-        <line class="min" ng-attr-transform="translate({{xScale(r.data.min)}})" y1="-5" y2="5"/>
-        <line class="max" ng-attr-transform="translate({{xScale(r.data.max)}})" y1="-5" y2="5"/>
-        <rect ng-attr-transform="translate({{xScale(r.data.mean)-4}},-4)" width="8" height="8"/>
+        <g class="results" ng-repeat="(_, r) in exam.results" ng-attr-transform="translate(0,{{yScale(r.topic.name)}})">
+          <text ng-attr-transform="translate({{-layout.margin.left+10}},0)">
+            {{r.topic.name}}
+          </text>
+          <line ng-attr-x1="{{xScale(r.data.min)}}" ng-attr-x2="{{xScale(r.data.max)}}"/>
+          <line class="min" ng-attr-transform="translate({{xScale(r.data.min)}})" y1="-5" y2="5"/>
+          <line class="max" ng-attr-transform="translate({{xScale(r.data.max)}})" y1="-5" y2="5"/>
+          <rect ng-attr-transform="translate({{xScale(r.data.mean)-4}},-4)" width="8" height="8"/>
+        </g>
       </g>
-    </g>
 
-    <g class="axis x-axis" ng-attr-transform="translate(0,{{layout.innerHeight}})">
-      <line ng-attr-x2="{{layout.innerWidth}}"/>
-      <g class="tick" ng-repeat="t in ticks" ng-attr-transform="translate({{xScale(t)}},0)">
-        <line y2="5"/>
+      <g class="axis x-axis" ng-attr-transform="translate(0,{{layout.innerHeight}})">
+        <line ng-attr-x2="{{layout.innerWidth}}"/>
+        <g class="tick" ng-repeat="t in ticks" ng-attr-transform="translate({{xScale(t)}},0)">
+          <line y2="5"/>
+        </g>
+        <g class="main-tick" ng-repeat="t in [-2, -1, 0, 1, 2]" ng-attr-transform="translate({{xScale(t)}},0)">
+          <line y1="5" y2="8"/>
+          <text dy="12">{{t}}</text>
+        </g>
       </g>
-      <g class="main-tick" ng-repeat="t in [-2, -1, 0, 1, 2]" ng-attr-transform="translate({{xScale(t)}},0)">
-        <line y1="5" y2="8"/>
-        <text dy="12">{{t}}</text>
-      </g>
-    </g>
 
-  </svg>
+    </svg>
+  </smupf-svg-container>
 </div>
 
 <div class="col-md-4">
