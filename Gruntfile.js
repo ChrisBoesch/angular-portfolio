@@ -13,12 +13,6 @@ module.exports = function(grunt) {
       options: {
         base: 'app/'
       },
-      webserver: {
-        options: {
-          port: 8888,
-          keepalive: true
-        }
-      },
       devserver: {
         options: {
           hostname: '0.0.0.0',
@@ -63,6 +57,13 @@ module.exports = function(grunt) {
         options: {
           base: 'coverage/',
           port: 5555,
+          keepalive: true
+        }
+      },
+      screenshots: {
+        options: {
+          base: 'screenshots/',
+          port: 5556,
           keepalive: true
         }
       }
@@ -219,6 +220,9 @@ module.exports = function(grunt) {
       },
       coverage: {
         path: 'http://0.0.0.0:5555'
+      },
+      screenshots: {
+        path: 'http://0.0.0.0:5556'
       }
     },
 
@@ -263,6 +267,24 @@ module.exports = function(grunt) {
         },
         coverageReporter: {type: 'text', dir : 'coverage/'}
       }
+    },
+
+    autoshot: {
+      default_options: {
+        options: {
+          path: 'screenshots/',
+          viewport: ['1024x655'],
+          local: false,
+          remote: {
+            files: [
+              {src: 'http://0.0.0.0:8888/#/', dest: 'students.jpg'},
+              {src: 'http://0.0.0.0:8888/#/portfolio/X2010200001', dest: 'portfolio.jpg'},
+              {src: 'http://0.0.0.0:8888/#/portfolio/X2010200001/exam/1', dest: 'exam.jpg'},
+              {src: 'http://0.0.0.0:8888/#/portfolio/X2010200001/evaluation/1', dest: 'evaluation.jpg'}
+            ]
+          }
+        }
+      }
     }
   });
 
@@ -287,9 +309,14 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['dev']);
 
   //development
-  grunt.registerTask('dev', ['build:dev', 'express:api', 'configureProxies:devserver',
-    'connect:devserver', 'watch']);
+  grunt.registerTask(
+    'server:dev',
+    ['express:api', 'configureProxies:devserver', 'connect:devserver']
+  );
+  grunt.registerTask('dev', ['build:dev', 'server:dev', 'watch']);
 
-  //server daemon
-  grunt.registerTask('serve', ['connect:webserver']);
+  //screenshots
+  grunt.registerTask(
+    'screenshots',
+    ['build:dev', 'server:dev', 'autoshot', 'connect:screenshots', 'open:screenshots']);
 };
