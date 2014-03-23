@@ -200,15 +200,18 @@ app.get('/students', function(req, res) {
 
 app.get('/portfolio/students/:id', function(req, res) {
   var id = req.params.id,
-    student = _.find(STUDENTS, function(s){return s.id === id;});
-
-  // for this mock up we assume all students took part to the same exams and
-  // evaluations.
-  student.examSeries = EXAMS;
-  student.evaluationSeries = EVALUATIONS;
+    student = _.find(STUDENTS, function(s){return s.id === id;}),
+    result = {
+      id: student.id,
+      student: student,
+      // for this mock up we assume all students took part to the same exams and
+      // evaluations.
+      examSeries: EXAMS,
+      evaluationSeries: EVALUATIONS
+    };
 
   setTimeout(function(){
-    res.send(student);
+    res.send(result);
   }, DELAY);
 });
 
