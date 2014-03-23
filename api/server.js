@@ -61,13 +61,17 @@ var examId = 1, EXAMS = {
 var EXAM_RESULTS = {};
 
 var evaluationId=1, EVALUATIONS = {
-  'TBD Evaluations': [
-    {name: 'Evaluation 1', id: evaluationId++},
-    {name: 'Evaluation 2', id: evaluationId++},
-    {name: 'Evaluation 3', id: evaluationId++},
-    {name: 'Evaluation 4', id: evaluationId++},
-    {name: 'Evaluation 5', id: evaluationId++}
-  ]
+  'evs1': {
+    id: 'evs1',
+    name: 'TBD Evaluations',
+    evaluations: [ // Should be an object (id -> evaluation)
+      {name: 'Evaluation 1', id: evaluationId++},
+      {name: 'Evaluation 2', id: evaluationId++},
+      {name: 'Evaluation 3', id: evaluationId++},
+      {name: 'Evaluation 4', id: evaluationId++},
+      {name: 'Evaluation 5', id: evaluationId++}
+    ]
+  }
 };
 
 var EVALUATION_RESULTS = {};
@@ -96,14 +100,14 @@ var EXAM_FIELDS = [
   'Surgery'
 ];
 
-var EVALUATION_FIELDS = [
-  'History Taking Skills',
-  'Physical Examination Skills',
-  'Analytical Skills',
-  'Communication Skills',
-  'Medical Knowledge',
-  'Management Skills'
-];
+var EVALUATION_FIELDS = {
+  't1': 'History Taking Skills',
+  't2': 'Physical Examination Skills',
+  't3': 'Analytical Skills',
+  't4': 'Communication Skills',
+  't5': 'Medical Knowledge',
+  't6': 'Management Skills',
+};
 
 var EVALUATION_RESULTS_TYPE = [
   'Do Not Meet',
@@ -145,26 +149,31 @@ _.forEach(EXAMS, function(series) {
   });
 });
 
-_.forEach(EVALUATIONS, function(evaluations, groupName) {
-  EVALUATION_RESULTS[groupName] = {};
-  _.forEach(evaluations, function(evaluation){
-    EVALUATION_RESULTS[groupName][evaluation.name] = _.map(EVALUATION_FIELDS, function(field) {
-      return {
-        name: field,
-        data: _.map(EVALUATION_RESULTS_TYPE, function(type) {
-          return {
-            name: type,
-            // will not create consistant data;
-            // I assuming the sum of all type of result should equal 100%,
-            // but the mock up only return random percentage
-            'You': getRandomArbitary(0, 1),
-            'All others': getRandomArbitary(0, 1),
-          };
-        })
+_.forEach(EVALUATIONS, function(series) {
+  series.evaluations.forEach(function(ev) {
+    var evaluation = EVALUATION_RESULTS[ev.id] = _.clone(ev);
+    
+    evaluation.series = {id: series.id, name: series.name};
+    evaluation.results = {};
+
+    _.forEach(EVALUATION_FIELDS, function(topicName, topicId) {
+      var topic = evaluation.results[topicId] = {
+        topic: {id: topicId, name: topicName}
       };
+
+      topic.data = EVALUATION_RESULTS_TYPE.map(function(name) {
+        return {
+          name: name,
+          value: getRandomArbitary(0, 1),
+          mean: getRandomArbitary(0, 1)
+        };
+      });
+
     });
+
   });
 });
+
 
 // Simulate slow network with a delay
 var DELAY = process.env.DELAY || 1000;
@@ -196,7 +205,7 @@ app.get('/portfolio/students/:id', function(req, res) {
   // for this mock up we assume all students took part to the same exams and
   // evaluations.
   student.examSeries = EXAMS;
-  student.evaluations = EVALUATIONS;
+  student.evaluationSeries = EVALUATIONS;
 
   setTimeout(function(){
     res.send(student);
@@ -216,24 +225,7 @@ app.get('/portfolio/students/:studentId/exams/:examId', function(req, res) {
 
 app.get('/portfolio/students/:studentId/evaluations/:evaluationId', function(req, res) {
   var evaluationId = req.params.evaluationId,
-    result = {
-      student: {id: req.params.studentId}
-    };
-
-  _.find(EVALUATIONS, function(evaluations, groupName){
-    return _.find(evaluations, function(evaluation) {
-      if (evaluation.id === evaluationId) {
-        result.groupName = groupName;
-        result.name = evaluation.name;
-        result.id = evaluation.id;
-
-        return true;
-      }
-      return false;
-    });
-  });
-
-  result.data = EVALUATION_RESULTS[result.groupName][result.name];
+    result = EVALUATION_RESULTS[evaluationId];
 
   setTimeout(function(){
     res.send(result);
