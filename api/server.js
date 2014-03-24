@@ -11,8 +11,8 @@ function getRandomArbitary(min, max) {
 
 
 var STUDENTS = [
-  {firstName: 'Alice', lastName: 'Smith', id: 'X2010200001', photo: 'http://placehold.it/300x400&text=portrait'},
-  {firstName: 'Bob', lastName: 'Taylor', id: 'X2010200002', photo: 'http://placehold.it/300x400&text=portrait'},
+  {firstName: 'Alice', lastName: 'Smith', id: 'X2010200001', photo: '/assets/alice.jpg'},
+  {firstName: 'Bob', lastName: 'Taylor', id: 'X2010200002', photo: '/assets/bob.jpg'},
 ];
 
 
