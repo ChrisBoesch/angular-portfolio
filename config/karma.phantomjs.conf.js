@@ -11,6 +11,7 @@ module.exports = function(config){
       'bower_components/restangular/dist/restangular.js',
       'bower_components/angular-animate/angular-animate.js',
       'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
+      'bower_components/core-education/app-build/js/app.js',
       'bower_components/angular-mocks/angular-mocks.js',
       'app/js/*.js',
       'test/unit/*.js'
