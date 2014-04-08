@@ -143,7 +143,8 @@ module.exports = function(grunt) {
           'bower_components/angular-route/angular-route.js',
           'bower_components/restangular/dist/restangular.js',
           'bower_components/angular-animate/angular-animate.js',
-          'bower_components/angular-bootstrap/ui-bootstrap-tpls.js'
+          'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
+          'bower_components/core-education/app-build/js/app.js'
         ],
         nonull: true
       }
