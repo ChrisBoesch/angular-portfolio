@@ -14,8 +14,9 @@
 angular.module("partials/smuPortFolio/charts/bars.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("partials/smuPortFolio/charts/bars.html",
     "<h4>{{data.topic.name}}</h4>\n" +
-    "<smupf-svg-container>\n" +
-    "  <svg smupf-viewbox=\"layout\">\n" +
+    "\n" +
+    "<scce-svg-container scce-viewbox=\"layout\">\n" +
+    "  <svg>\n" +
     "\n" +
     "    <g class=\"rulers\">\n" +
     "      <line ng-repeat=\"v in yAxisScale.ticks(10)\"\n" +
@@ -62,7 +63,7 @@ angular.module("partials/smuPortFolio/charts/bars.html", []).run(["$templateCach
     "    </g>\n" +
     "\n" +
     "  </svg>\n" +
-    "</smupf-svg-container>");
+    "</scce-svg-container>");
 }]);
 
 angular.module("partials/smuPortFolio/evaluation.html", []).run(["$templateCache", function($templateCache) {
@@ -84,8 +85,8 @@ angular.module("partials/smuPortFolio/evaluation.html", []).run(["$templateCache
 angular.module("partials/smuPortFolio/exam.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("partials/smuPortFolio/exam.html",
     "<div class=\"col-md-8\">\n" +
-    "  <smupf-svg-container>\n" +
-    "    <svg smupf-viewbox=\"layout\">\n" +
+    "  <scce-svg-container scce-viewbox=\"layout\">\n" +
+    "    <svg>\n" +
     "\n" +
     "      <g class=\"chart\">\n" +
     "        <rect class=\"border\" ng-attr-width=\"{{layout.innerWidth}}\" ng-attr-height=\"{{layout.innerHeight}}\"/>\n" +
@@ -114,7 +115,7 @@ angular.module("partials/smuPortFolio/exam.html", []).run(["$templateCache", fun
     "      </g>\n" +
     "\n" +
     "    </svg>\n" +
-    "  </smupf-svg-container>\n" +
+    "  </scce-svg-container>\n" +
     "</div>\n" +
     "\n" +
     "<div class=\"col-md-4\">\n" +
@@ -213,89 +214,7 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
 ;(function(){
   'use strict';
 
-  angular.module('smuPortFolio.directives', []).
-
-    directive('smupfSvgContainer', function() {
-      return {
-        restrict: 'E',
-        transclude: true,
-        scope: {},
-        controller: function($scope){
-
-          $scope.container = {
-            'display': 'inline-block',
-            'position': 'relative',
-            'width': '100%',
-            'padding-bottom': '100%',
-            'vertical-align': 'middle',
-            'overflow': 'hidden'
-          };
-
-          this.setRatio = function(ratio) {
-            console.log(ratio);
-            $scope.container['padding-bottom'] = (ratio * 100) + '%';
-          };
-
-        },
-        template: '<div ng-transclude ng-style="container"></div>',
-        link: function(scope, element) {
-          element.find('svg').css({
-            'display': 'inline-block',
-            'position': 'absolute',
-            'top': '0',
-            'left': '0'
-          });
-        }
-      };
-    }).
-
-
-    /**
-     * Directive to set the a `svga element `viewBox` attribute
-     * from values from the scope.
-     *
-     * With:
-     *
-     *  <svg ng-attr-viewBox="0 0 {{100}} {{100}}"/>
-     *
-     * Angular would produce the correct attribute but it would have no effect.
-     * This directive edit the viewBox.baseVal property directly.
-     *
-     * Usage:
-     *
-     *  <svg smu-pf-view-box="layout"/>
-     *
-     * where `$scope.layout == {width: 100, height: 100, margin:{top:10, left:20}}`
-     *
-     * TODO: should create package that scoreboard and portfolio can share.
-     *
-     */
-    directive('smupfViewbox', function(){
-      return {
-        require: '?^smupfSvgContainer',
-        scope: {
-          'viewBox': '=?smupfViewbox'
-        },
-        link: function(scope, element, attrs, containerCtrl) {
-
-          element.get(0).setAttribute('preserveAspectRatio', 'xMinYMin meet');
-
-          scope.$watch('viewBox', function(){
-            var vb = scope.viewBox;
-
-            element.get(0).setAttribute(
-              'viewBox',
-              [-vb.margin.left, -vb.margin.top, vb.width, vb.height].join(' ')
-            );
-
-            if (containerCtrl && containerCtrl.setRatio) {
-              containerCtrl.setRatio(vb.height / vb.width);
-            }
-
-          });
-        }
-      };
-    }).
+  angular.module('smuPortFolio.directives', ['scceSvg.directives']).
 
     directive('smupfBars', ['SMU_PL_TPL_PATH', 'smuPFSvgLayout', '$window', function(path, layout, window) {
           return {
@@ -439,7 +358,7 @@ angular.module("partials/smuPortFolio/portfolio.html", []).run(["$templateCache"
 ;(function() {
   'use strict';
 
-  angular.module('smuPortFolio.controllers', ['smuPortFolio.services', 'scceUser.services']).
+  angular.module('smuPortFolio.controllers', ['smuPortFolio.services', 'scceUser.services', 'scceSvg.directives']).
 
   /**
    * Should fetch login info and update scope.log with it

@@ -1,6 +1,7 @@
 <h4>{{data.topic.name}}</h4>
-<smupf-svg-container>
-  <svg smupf-viewbox="layout">
+
+<scce-svg-container scce-viewbox="layout">
+  <svg>
 
     <g class="rulers">
       <line ng-repeat="v in yAxisScale.ticks(10)"
@@ -47,4 +48,4 @@
     </g>
 
   </svg>
-</smupf-svg-container>
+</scce-svg-container>

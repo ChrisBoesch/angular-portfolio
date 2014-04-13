@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  angular.module('smuPortFolio.controllers', ['smuPortFolio.services', 'scceUser.services']).
+  angular.module('smuPortFolio.controllers', ['smuPortFolio.services', 'scceUser.services', 'scceSvg.directives']).
 
   /**
    * Should fetch login info and update scope.log with it

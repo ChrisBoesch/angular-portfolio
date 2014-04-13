@@ -3,8 +3,9 @@ angular.module('templates-main', ['partials/smuPortFolio/charts/bars.html', 'par
 angular.module("partials/smuPortFolio/charts/bars.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("partials/smuPortFolio/charts/bars.html",
     "<h4>{{data.topic.name}}</h4>\n" +
-    "<smupf-svg-container>\n" +
-    "  <svg smupf-viewbox=\"layout\">\n" +
+    "\n" +
+    "<scce-svg-container scce-viewbox=\"layout\">\n" +
+    "  <svg>\n" +
     "\n" +
     "    <g class=\"rulers\">\n" +
     "      <line ng-repeat=\"v in yAxisScale.ticks(10)\"\n" +
@@ -51,7 +52,7 @@ angular.module("partials/smuPortFolio/charts/bars.html", []).run(["$templateCach
     "    </g>\n" +
     "\n" +
     "  </svg>\n" +
-    "</smupf-svg-container>");
+    "</scce-svg-container>");
 }]);
 
 angular.module("partials/smuPortFolio/evaluation.html", []).run(["$templateCache", function($templateCache) {
@@ -73,8 +74,8 @@ angular.module("partials/smuPortFolio/evaluation.html", []).run(["$templateCache
 angular.module("partials/smuPortFolio/exam.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("partials/smuPortFolio/exam.html",
     "<div class=\"col-md-8\">\n" +
-    "  <smupf-svg-container>\n" +
-    "    <svg smupf-viewbox=\"layout\">\n" +
+    "  <scce-svg-container scce-viewbox=\"layout\">\n" +
+    "    <svg>\n" +
     "\n" +
     "      <g class=\"chart\">\n" +
     "        <rect class=\"border\" ng-attr-width=\"{{layout.innerWidth}}\" ng-attr-height=\"{{layout.innerHeight}}\"/>\n" +
@@ -103,7 +104,7 @@ angular.module("partials/smuPortFolio/exam.html", []).run(["$templateCache", fun
     "      </g>\n" +
     "\n" +
     "    </svg>\n" +
-    "  </smupf-svg-container>\n" +
+    "  </scce-svg-container>\n" +
     "</div>\n" +
     "\n" +
     "<div class=\"col-md-4\">\n" +
